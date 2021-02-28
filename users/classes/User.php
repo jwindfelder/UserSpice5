@@ -109,8 +109,8 @@ class User
 
                         $this->_db->insert('users_session', [
                             'user_id' => $this->data()->id,
-                            'hash' => $hash,
-                            'uagent' => Session::uagent_no_version(),
+                            'hash'    => $hash,
+                            'uagent'  => Session::uagent_no_version(),
                         ]);
 
                         Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
@@ -125,13 +125,13 @@ class User
                     if ($c < 1) {
                         $this->_db->insert('us_ip_list', [
                             'user_id' => $this->data()->id,
-                            'ip' => $ip,
+                            'ip'      => $ip,
                         ]);
                     } else {
                         $f = $q->first();
                         $this->_db->update('us_ip_list', $f->id, [
                             'user_id' => $this->data()->id,
-                            'ip' => $ip,
+                            'ip'      => $ip,
                         ]);
                     }
 
@@ -160,8 +160,8 @@ class User
 
                         $this->_db->insert('users_session', [
                             'user_id' => $this->data()->id,
-                            'hash' => $hash,
-                            'uagent' => Session::uagent_no_version(),
+                            'hash'    => $hash,
+                            'uagent'  => Session::uagent_no_version(),
                         ]);
 
                         Cookie::put($this->_cookieName, $hash, Config::get('remember/cookie_expiry'));
@@ -176,13 +176,13 @@ class User
                     if ($c < 1) {
                         $this->_db->insert('us_ip_list', [
                             'user_id' => $this->data()->id,
-                            'ip' => $ip,
+                            'ip'      => $ip,
                         ]);
                     } else {
                         $f = $q->first();
                         $this->_db->update('us_ip_list', $f->id, [
                             'user_id' => $this->data()->id,
-                            'ip' => $ip,
+                            'ip'      => $ip,
                         ]);
                     }
 
@@ -203,12 +203,12 @@ class User
         $fakeUN = $email;
         $active = 1;
         //Check to see if a user has Google oAuth
-        $prevQuery = $this->_db->query("SELECT * FROM users WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die('Google oAuth Error');
+        $prevQuery = $this->_db->query("SELECT * FROM users WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or exit('Google oAuth Error');
 
         //If a user is already setup with oAuth, get the latest info
         if ($prevQuery->count() > 0) {
             // die("user already has oauth");
-            $update = $this->_db->query("UPDATE $this->tableName SET oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', username = '".$fakeUN."',permissions = '".$active."',email_verfied = '".$active."',active = '".$active."',picture = '".$picture."', gpluslink = '".$link."', modified = '".date('Y-m-d H:i:s')."' WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die('Google oAuth Error');
+            $update = $this->_db->query("UPDATE $this->tableName SET oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', username = '".$fakeUN."',permissions = '".$active."',email_verfied = '".$active."',active = '".$active."',picture = '".$picture."', gpluslink = '".$link."', modified = '".date('Y-m-d H:i:s')."' WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or exit('Google oAuth Error');
         } else {
             //Check to see if the user has a regular UserSpice account that matches the google email.
             $findExistingUS = $this->_db->query('SELECT * FROM users WHERE email = ?', [$email]);
@@ -218,7 +218,7 @@ class User
             if ($foundUS == 1) {
                 //Found an existing UserSpice user with the same email
                 // die("user already has userspice");
-                $this->_db->query('UPDATE users WHERE id = 3 SET lname = ?', [$email]) or die('Google oAuth Error');
+                $this->_db->query('UPDATE users WHERE id = 3 SET lname = ?', [$email]) or exit('Google oAuth Error');
             } else {
                 //If a user has neither UserSpice nor oAuth creds
                 //die("user has neither");
@@ -232,7 +232,7 @@ class User
                 } else {
                     $username = $email;
                 }
-                $insert = $this->_db->query("INSERT INTO $this->tableName SET `password` = NULL,username = '".$username."',active = '".$active."',oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."',permissions = '".$active."', email_verified = '".$active."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', picture = '".$picture."', gpluslink = '".$link."', join_date = '".date('Y-m-d H:i:s')."',created = '".date('Y-m-d H:i:s')."', modified = '".date('Y-m-d H:i:s')."'") or die('Google oAuth Error');
+                $insert = $this->_db->query("INSERT INTO $this->tableName SET `password` = NULL,username = '".$username."',active = '".$active."',oauth_provider = '".$oauth_provider."', oauth_uid = '".$oauth_uid."',permissions = '".$active."', email_verified = '".$active."', fname = '".$fname."', lname = '".$lname."', email = '".$email."', picture = '".$picture."', gpluslink = '".$link."', join_date = '".date('Y-m-d H:i:s')."',created = '".date('Y-m-d H:i:s')."', modified = '".date('Y-m-d H:i:s')."'") or exit('Google oAuth Error');
                 $lastID = $insert->lastId();
 
                 $insert2 = $this->_db->query("INSERT INTO user_permission_matches SET user_id = $lastID, permission_id = 1");
@@ -240,7 +240,7 @@ class User
             }
         }
 
-        $query = $this->_db->query("SELECT * FROM $this->tableName WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or die('Google oAuth Error');
+        $query = $this->_db->query("SELECT * FROM $this->tableName WHERE oauth_provider = '".$oauth_provider."' AND oauth_uid = '".$oauth_uid."'") or exit('Google oAuth Error');
         $result = $query->first();
         if ($this->_isNewAccount) {
             $result->isNewAccount = true;

@@ -1,4 +1,5 @@
 <?php
+
 //feel free to edit these as desired. They're just suggestions.
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -13,19 +14,17 @@ The content-security-policy HTTP header provides an additional layer of security
 ** Not specified because you cannot predict what content sources will be required by the users of UserSpice **
 */
 
-
 /*
 2. HTTP Strict Transport Security (HSTS)
 
 The strict-transport-security header is a security enhancement that restricts web browsers to access web servers solely over HTTPS. This ensures the connection cannot be establish through an insecure HTTP connection which could be susceptible to attacks.
 */
 
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
 
-if ($protocol === "https://") {
-header("Strict-Transport-Security:max-age=31536000; includeSubdomains; preload");
+if ($protocol === 'https://') {
+    header('Strict-Transport-Security:max-age=31536000; includeSubdomains; preload');
 }
-
 
 /*
 3. X-Frame-Options
@@ -34,8 +33,7 @@ The x-frame-options header provides clickjacking protection by not allowing ifra
 helps prevent clickjacking by indicating to a browser that it should not render the page in a frame (or an iframe or object).
 */
 
-header("X-Frame-Options: SAMEORIGIN");
-
+header('X-Frame-Options: SAMEORIGIN');
 
 /*
 4. X-XSS-Protection
@@ -49,8 +47,7 @@ The reflected-xss directive configures the built in heuristics a user agent has 
     Filter - Filter the reflected XSS attack.
 */
 
-header("X-XSS-Protection: 1; mode=block");
-
+header('X-XSS-Protection: 1; mode=block');
 
 /*
 5. X-Content-Type-Options
@@ -59,8 +56,7 @@ The X-content-type header prevents Internet Explorer and Google Chrome from snif
 X-Content-Type-Options header instructs IE not to sniff mime types, preventing attacks related to mime-sniffing.
 */
 
-header("X-Content-Type-Options: nosniff");
-
+header('X-Content-Type-Options: nosniff');
 
 /*
 6. The referrer directive specifies information for the referrer header in links away from the page.
@@ -72,12 +68,10 @@ header("X-Content-Type-Options: nosniff");
     Unsafe URL - Allows the UA to send the full URL in the referrer header with same-origin and cross-origin requests. This is unsafe.
 */
 
-header("Referrer-Policy: no-referrer-when-downgrade");
-
+header('Referrer-Policy: no-referrer-when-downgrade');
 
 // 7. There is no direct security risk, but exposing an outdated (and possibly vulnerable) version of PHP may be an invitation for people to try and attack it.
 
-header_remove("X-Powered-By");
+header_remove('X-Powered-By');
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- ?>

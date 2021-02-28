@@ -1,7 +1,7 @@
 <?php
 ini_set('max_execution_time', 1356);
-ini_set('memory_limit','1024M');
-?><?php require_once("install_settings.php"); ?>
+ini_set('memory_limit', '1024M');
+?><?php require_once 'install_settings.php'; ?>
 <!doctype html>
 <html lang="en">
 	<head>
@@ -23,19 +23,21 @@ ini_set('memory_limit','1024M');
 </header>
 
  <?php
- function redirect($location = null){
-   if ($location) {
-       if (!headers_sent()){
-           header('Location: '.$location);
-           exit();
+ function redirect($location = null)
+ {
+     if ($location) {
+         if (!headers_sent()) {
+             header('Location: '.$location);
+             exit();
          } else {
-           echo '<script type="text/javascript">';
-           echo 'window.location.href="'.$location.'";';
-           echo '</script>';
-           echo '<noscript>';
-           echo '<meta http-equiv="refresh" content="0;url='.$location.'" />';
-           echo '</noscript>'; exit;
+             echo '<script type="text/javascript">';
+             echo 'window.location.href="'.$location.'";';
+             echo '</script>';
+             echo '<noscript>';
+             echo '<meta http-equiv="refresh" content="0;url='.$location.'" />';
+             echo '</noscript>';
+             exit;
          }
-   }
+     }
  }
  ?>

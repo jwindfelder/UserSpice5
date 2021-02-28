@@ -2,7 +2,7 @@
 
 <!-- Important Info -->
 <?php
-$top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5")->results();
+$top = $db->query('SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5')->results();
 ?>
 <div class="col-lg-4 col-md-6">
   <aside class="profile-nav alt">
@@ -33,23 +33,23 @@ $top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5")->
         $ini = php_ini_loaded_file();
         echo $ini;
         ?>
-        <span class="badge badge-primary"><?php echo $phpver = phpversion();?>
+        <span class="badge badge-primary"><?php echo $phpver = phpversion(); ?>
         </span>
         <span class="pull-right">
           <?php
-          if(version_compare('7.1.0',$phpver) ==  1){
-            echo "<font color='red'>v7.1 or Greater Suggested</font>";
+          if (version_compare('7.1.0', $phpver) == 1) {
+              echo "<font color='red'>v7.1 or Greater Suggested</font>";
           }
           ?>
         </span>
       </li>
-      <?php $dataB = $db->query("select version()")->results(true);?>
+      <?php $dataB = $db->query('select version()')->results(true); ?>
       <li class="list-group-item">
-        DB Version <span class="badge badge-primary"><?=$dataB[0]["version()"];?></span>
+        DB Version <span class="badge badge-primary"><?=$dataB[0]['version()']; ?></span>
         <span class="pull-right"></span>
       </li>
       <li class="list-group-item">
-        OS Info <span class="badge badge-primary"><?=php_uname('s');?>-<?=php_uname('v');?></span>
+        OS Info <span class="badge badge-primary"><?=php_uname('s'); ?>-<?=php_uname('v'); ?></span>
         <span class="pull-right"></span>
       </li>
     </ul>
@@ -104,7 +104,7 @@ $top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 5")->
 
 <!-- Top Users -->
 <?php
-$top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 4")->results();
+$top = $db->query('SELECT id, logins FROM users ORDER BY logins DESC LIMIT 4')->results();
 ?>
 <div class="col-lg-4 col-md-6">
   <aside class="profile-nav alt">
@@ -128,9 +128,9 @@ $top = $db->query("SELECT id, logins FROM users ORDER BY logins DESC LIMIT 4")->
     <ul class="list-group list-group-flush">
       <?php
       $count = 1;
-      foreach($top as $t){ ?>
+      foreach ($top as $t) { ?>
         <li class="list-group-item">
-          <a href="admin.php?view=users&id=<?=$t->id?>"> #<?=$count?> <?php echoUser($t->id);?> <span class="badge badge-primary pull-right"><?=$t->logins?> logins</span></a>
+          <a href="admin.php?view=users&id=<?=$t->id?>"> #<?=$count?> <?php echoUser($t->id); ?> <span class="badge badge-primary pull-right"><?=$t->logins?> logins</span></a>
         </li>
         <?php
         $count++;

@@ -21,18 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
   <div class="col-sm-12">
-    <h2><?=lang("EML_VER");?></h2>
+    <h2><?=lang('EML_VER'); ?></h2>
     <ol>
-      <li><?=lang("VER_AGAIN");?></li>
-      <?=lang("VER_PAGE");?>
+      <li><?=lang('VER_AGAIN'); ?></li>
+      <?=lang('VER_PAGE'); ?>
     </ol>
     <form class="" action="verify_resend.php" method="post">
-      <?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
+      <?php if (!$errors == '') {?><div class="alert alert-danger"><?=display_errors($errors); ?></div><?php } ?>
       <div class="form-group">
-        <input class="form-control" type="text" id="email" name="email" placeholder="<?=lang("GEN_EMAIL");?>" autocomplete="email">
+        <input class="form-control" type="text" id="email" name="email" placeholder="<?=lang('GEN_EMAIL'); ?>" autocomplete="email">
       </div>
-      <input type="hidden" name="csrf" value="<?=Token::generate();?>">
-      <input type="submit" value="<?=lang("VER_RESEND");?>" class="btn btn-primary">
+      <input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
+      <input type="submit" value="<?=lang('VER_RESEND'); ?>" class="btn btn-primary">
     </form><br />
   </div>
 </div>

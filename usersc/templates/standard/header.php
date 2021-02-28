@@ -1,7 +1,7 @@
-<?php require_once($abs_us_root.$us_url_root.'users/includes/template/header1_must_include.php'); ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/template/header1_must_include.php'; ?>
 
 <!-- Bootstrap 3 Glyphicons for Compatibility Reasons -->
-<?php require_once($abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/assets/fonts/glyphicons.php'); ?>
+<?php require_once $abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'/assets/fonts/glyphicons.php'; ?>
 
 
 <!-- Bootstrap Core CSS -->
@@ -30,7 +30,7 @@ font-family: 'Roboto', sans-serif !important;
 <link href="<?=$us_url_root?>usersc/templates/<?=$settings->template?>/assets/css/hamburgers.min.css" rel="stylesheet">
 <?php
 //optional
-if(file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'.css')){?> <link href="<?=$us_url_root?>usersc/templates/<?=$settings->template?>.css" rel="stylesheet"> <?php } ?>
+if (file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$settings->template.'.css')) {?> <link href="<?=$us_url_root?>usersc/templates/<?=$settings->template?>.css" rel="stylesheet"> <?php } ?>
 
 </head>
-<?php require_once($abs_us_root.$us_url_root.'users/includes/template/header3_must_include.php'); ?>
+<?php require_once $abs_us_root.$us_url_root.'users/includes/template/header3_must_include.php'; ?>

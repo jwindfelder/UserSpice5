@@ -21,20 +21,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ?>
 <div class="row">
 	<div class="col-sm-12">
-		<h1><?=lang("PW_RESET");?></h1>
+		<h1><?=lang('PW_RESET'); ?></h1>
 		<ol>
-			<?=lang("VER_INS");?>
+			<?=lang('VER_INS'); ?>
 		</ol>
-		<?php if(!$errors=='') {?><div class="alert alert-danger"><?=display_errors($errors);?></div><?php } ?>
+		<?php if (!$errors == '') {?><div class="alert alert-danger"><?=display_errors($errors); ?></div><?php } ?>
 		<form action="forgot_password.php" method="post" class="form ">
 
 			<div class="form-group">
-				<label for="email"><?=lang("GEN_EMAIL");?></label>
-				<input type="text" name="email" placeholder="<?=lang("GEN_EMAIL");?>" class="form-control" autofocus autocomplete='email'>
+				<label for="email"><?=lang('GEN_EMAIL'); ?></label>
+				<input type="text" name="email" placeholder="<?=lang('GEN_EMAIL'); ?>" class="form-control" autofocus autocomplete='email'>
 			</div>
 
-			<input type="hidden" name="csrf" value="<?=Token::generate();?>">
-			<p><input type="submit" name="forgotten_password" value="<?=lang("GEN_RESET");?>" class="btn btn-primary"></p>
+			<input type="hidden" name="csrf" value="<?=Token::generate(); ?>">
+			<p><input type="submit" name="forgotten_password" value="<?=lang('GEN_RESET'); ?>" class="btn btn-primary"></p>
 		</form>
 
 	</div><!-- /.col -->

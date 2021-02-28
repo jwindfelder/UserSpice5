@@ -3,7 +3,7 @@
     <p class="float-right">
       <a href="#">Back to top</a>
     </p>
-    <p>&copy; 2015-<?=date("Y")?> UserSpice. All Rights Reserved.</p>
+    <p>&copy; 2015-<?=date('Y')?> UserSpice. All Rights Reserved.</p>
   </div>
 </footer>
 

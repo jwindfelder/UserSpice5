@@ -4,12 +4,12 @@
   $db = DB::getInstance();
   $settings = $db->query('SELECT * FROM settings')->first();
   if (!hasPerm([2], $user->data()->id)) {
-      die('You do not have permission to be here.');
+      exit('You do not have permission to be here.');
   }
 
 $return = [
-  'isJson' => false,
-  'Data' => null,
+    'isJson' => false,
+    'Data'   => null,
 ];
 
 $id = Input::get('id');
@@ -25,4 +25,4 @@ if ($db->count() == 1) {
     dump(null);
 }
 
-die();
+exit();

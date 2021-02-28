@@ -15,71 +15,70 @@
 //Errors Successes
 $errors = [];
 $successes = [];
-$dirs = glob($abs_us_root . $us_url_root . 'usersc/plugins/*', GLOB_ONLYDIR);
+$dirs = glob($abs_us_root.$us_url_root.'usersc/plugins/*', GLOB_ONLYDIR);
 $plugins = [];
-if (!is_writeable($abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php')) {
-  err("Warning. Your plugins.ini.php file is not writeable. This will cause problems installing plugins.");
+if (!is_writeable($abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php')) {
+    err('Warning. Your plugins.ini.php file is not writeable. This will cause problems installing plugins.');
 }
 foreach ($dirs as $d) {
-  $plugins[] = str_replace($abs_us_root . $us_url_root . 'usersc/plugins/', "", $d);
-  $thisPlugin = end($plugins);
-  if (!array_key_exists($thisPlugin, $usplugins)) {
-    $usplugins[$thisPlugin] = 2;
-    write_php_ini($usplugins, $abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php');
-  }
+    $plugins[] = str_replace($abs_us_root.$us_url_root.'usersc/plugins/', '', $d);
+    $thisPlugin = end($plugins);
+    if (!array_key_exists($thisPlugin, $usplugins)) {
+        $usplugins[$thisPlugin] = 2;
+        write_php_ini($usplugins, $abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php');
+    }
 }
 
 $pluginsC = sizeof($plugins);
 
 if (!empty($_POST)) {
-  $disable = Input::get('disable');
-  $activate = Input::get('activate');
-  $uninstall = Input::get('uninstall');
-  $install = Input::get('install');
-  $plugin = Input::get('plugin');
-  $jump = Input::get('jump');
+    $disable = Input::get('disable');
+    $activate = Input::get('activate');
+    $uninstall = Input::get('uninstall');
+    $install = Input::get('install');
+    $plugin = Input::get('plugin');
+    $jump = Input::get('jump');
 
-
-  if ($activate != '') {
-    $usplugins[$plugin] = 1;
-    write_php_ini($usplugins, $abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php');
-    if (file_exists($abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/activate.php')) {
-      include $abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/activate.php';
+    if ($activate != '') {
+        $usplugins[$plugin] = 1;
+        write_php_ini($usplugins, $abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php');
+        if (file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/activate.php')) {
+            include $abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/activate.php';
+        }
+        if (file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/migrate.php')) {
+            include $abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/migrate.php';
+        }
+        $pluginId = $db->query('SELECT id FROM us_plugins WHERE plugin = ?', [$plugin])->first();
+        $db->update('us_plugins', $pluginId->id, ['last_check'=>date('Y-m-d H:i:s')]);
+        Redirect::to('admin.php?view=plugins&err='.$plugin.' activated'.$jump);
     }
-    if (file_exists($abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/migrate.php')) {
-      include $abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/migrate.php';
-    }
-    $pluginId = $db->query("SELECT id FROM us_plugins WHERE plugin = ?",[$plugin])->first();
-    $db->update('us_plugins',$pluginId->id,['last_check'=>date("Y-m-d H:i:s")]);
-    Redirect::to('admin.php?view=plugins&err=' . $plugin . ' activated' . $jump);
-  }
 
-  if ($disable != '') {
-    $usplugins[$plugin] = 0;
-    write_php_ini($usplugins, $abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php');
-    $db->update('us_plugins', ['plugin', '=', $plugin], ['status' => 'disabled']);
-    Redirect::to('admin.php?view=plugins&err=' . $plugin . ' disabled' . $jump);
-  }
-
-  if ($uninstall != '') {
-    $usplugins[$plugin] = 2;
-    $db->update('us_plugins', ['plugin', '=', $plugin], ['status' => 'uninstalled']);
-    write_php_ini($usplugins, $abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php');
-    if (file_exists($abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/uninstall.php')) {
-      echo "file exists";
-      include $abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/uninstall.php';
+    if ($disable != '') {
+        $usplugins[$plugin] = 0;
+        write_php_ini($usplugins, $abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php');
+        $db->update('us_plugins', ['plugin', '=', $plugin], ['status' => 'disabled']);
+        Redirect::to('admin.php?view=plugins&err='.$plugin.' disabled'.$jump);
     }
-    Redirect::to('admin.php?view=plugins&err=' . $plugin . ' uninstalled. You may delete the plugin files if you wish.' . $jump);
-  }
 
-  if ($install != '') {
-    $usplugins[$plugin] = 0;
-    write_php_ini($usplugins, $abs_us_root . $us_url_root . 'usersc/plugins/plugins.ini.php');
-    if (file_exists($abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/install.php')) {
-      include $abs_us_root . $us_url_root . 'usersc/plugins/' . $plugin . '/install.php';
+    if ($uninstall != '') {
+        $usplugins[$plugin] = 2;
+        $db->update('us_plugins', ['plugin', '=', $plugin], ['status' => 'uninstalled']);
+        write_php_ini($usplugins, $abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php');
+        if (file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/uninstall.php')) {
+            echo 'file exists';
+            include $abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/uninstall.php';
+        }
+        Redirect::to('admin.php?view=plugins&err='.$plugin.' uninstalled. You may delete the plugin files if you wish.'.$jump);
     }
-    Redirect::to('admin.php?view=plugins&err=' . $plugin . ' installed but not enabled.' . $jump);
-  }
+
+    if ($install != '') {
+        $usplugins[$plugin] = 0;
+        write_php_ini($usplugins, $abs_us_root.$us_url_root.'usersc/plugins/plugins.ini.php');
+        if (file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/install.php')) {
+            include $abs_us_root.$us_url_root.'usersc/plugins/'.$plugin.'/install.php';
+        }
+        Redirect::to('admin.php?view=plugins&err='.$plugin.' installed but not enabled.'.$jump);
+    }
 }
 $token = Token::generate();
 ?>
@@ -121,14 +120,13 @@ $token = Token::generate();
               <tbody>
                 <?php
                   foreach ($plugins as $t) {
-                    $xml = simplexml_load_file($abs_us_root . $us_url_root . 'usersc/plugins/' . $t . '/info.xml');
-                    if (file_exists($abs_us_root . $us_url_root . 'usersc/plugins/' . $t . '/logo.png')) {
-                      $img_src = $us_url_root . 'usersc/plugins/' . $t . '/logo.png';
-                    } else {
-                      $img_src = $us_url_root . 'users/images/plugin.png';
-                    }
-                    $buttonTitle = $xml->button != '' ? $xml->button : "Configure Plugin";
-                    ?>
+                      $xml = simplexml_load_file($abs_us_root.$us_url_root.'usersc/plugins/'.$t.'/info.xml');
+                      if (file_exists($abs_us_root.$us_url_root.'usersc/plugins/'.$t.'/logo.png')) {
+                          $img_src = $us_url_root.'usersc/plugins/'.$t.'/logo.png';
+                      } else {
+                          $img_src = $us_url_root.'users/images/plugin.png';
+                      }
+                      $buttonTitle = $xml->button != '' ? $xml->button : 'Configure Plugin'; ?>
                   <tr id="ctrl-<?= $xml->name ?>">
                     <td>
                       <div class="d-flex flex-row">
@@ -160,7 +158,7 @@ $token = Token::generate();
                             <button type="submit" name="disable" value="Disable" class="btn btn-outline-dark" title="Disable">
                               <i class="fa fa-ban" aria-hidden="true"></i>
                             </button>
-                            <a class="btn btn-outline-primary" title="Configure" href="<?= $us_url_root . 'users/admin.php?view=plugins_config&plugin=' . $t ?>" role="button">
+                            <a class="btn btn-outline-primary" title="Configure" href="<?= $us_url_root.'users/admin.php?view=plugins_config&plugin='.$t ?>" role="button">
                               <i class="fa fa-cogs" aria-hidden="true"></i>
                             </a>
                           <?php } ?>
@@ -182,12 +180,13 @@ $token = Token::generate();
                       </div>
                     </td>
                   </tr>
-                <?php } ?>
+                <?php
+                  } ?>
               </tbody>
             </table>
           <?php } else { //pluginsC < 1
-            echo "<br><strong>No plugins are currently installed.</strong>";
-          } ?>
+                      echo '<br><strong>No plugins are currently installed.</strong>';
+                  } ?>
         </div>
       </div>
     </div>
@@ -200,8 +199,8 @@ $token = Token::generate();
   })
 </script>
 <?php function pluginStatus($status)
-{
-  if ($status == 0) { ?>
+                  {
+                      if ($status == 0) { ?>
     <span class="text-primary">Installed but Disabled</span>
   <?php
     } elseif ($status == 1) { ?>
@@ -211,5 +210,5 @@ $token = Token::generate();
     <span class="text-danger">Not Installed</span>
 <?php
   }
-}
+                  }
 ?>

@@ -13,40 +13,40 @@
 </header>
 
 <?php
-$wl = $db->query("SELECT * FROM us_ip_whitelist")->results();
-$bl = $db->query("SELECT * FROM us_ip_blacklist")->results();
+$wl = $db->query('SELECT * FROM us_ip_whitelist')->results();
+$bl = $db->query('SELECT * FROM us_ip_blacklist')->results();
 if (!empty($_POST)) {
-  if (!empty($_POST['newIP'])) {
-    $ip = Input::get('ip');
-    $wl = Input::get('type');
-    if (filter_var($ip, FILTER_VALIDATE_IP)) {
-      if ($wl == 'whitelist') {
-        logger($user->data()->id, "Setting Change", "Whitelisted " . $ip);
-        $db->insert('us_ip_whitelist', ['ip' => $ip]);
-        Redirect::to($us_url_root . 'users/admin.php?view=ip&err=New+IP+Whitelisted');
-      } else {
-        logger($user->data()->id, "Setting Change", "Blacklisted " . $ip);
-        $db->insert('us_ip_blacklist', ['ip' => $ip]);
-        Redirect::to($us_url_root . 'users/admin.php?view=ip&err=New+IP+Blacklisted');
-      }
-    } else {
-      Redirect::to($us_url_root . 'users/admin.php?view=ip&err=Invalid+IP+address');
+    if (!empty($_POST['newIP'])) {
+        $ip = Input::get('ip');
+        $wl = Input::get('type');
+        if (filter_var($ip, FILTER_VALIDATE_IP)) {
+            if ($wl == 'whitelist') {
+                logger($user->data()->id, 'Setting Change', 'Whitelisted '.$ip);
+                $db->insert('us_ip_whitelist', ['ip' => $ip]);
+                Redirect::to($us_url_root.'users/admin.php?view=ip&err=New+IP+Whitelisted');
+            } else {
+                logger($user->data()->id, 'Setting Change', 'Blacklisted '.$ip);
+                $db->insert('us_ip_blacklist', ['ip' => $ip]);
+                Redirect::to($us_url_root.'users/admin.php?view=ip&err=New+IP+Blacklisted');
+            }
+        } else {
+            Redirect::to($us_url_root.'users/admin.php?view=ip&err=Invalid+IP+address');
+        }
     }
-  }
 
-  if (!empty($_POST['delete'])) {
-    foreach ($_POST['deletewhite'] as $k => $v) {
-      $ip = $db->query("SELECT ip FROM us_ip_whitelist WHERE id = ?", array($v))->first();
-      logger($user->data()->id, "Setting Change", "Deleted " . $ip->ip . " from whitelist");
-      $db->deleteById('us_ip_whitelist', $v);
+    if (!empty($_POST['delete'])) {
+        foreach ($_POST['deletewhite'] as $k => $v) {
+            $ip = $db->query('SELECT ip FROM us_ip_whitelist WHERE id = ?', [$v])->first();
+            logger($user->data()->id, 'Setting Change', 'Deleted '.$ip->ip.' from whitelist');
+            $db->deleteById('us_ip_whitelist', $v);
+        }
+        foreach ($_POST['deleteblack'] as $k => $v) {
+            $ip = $db->query('SELECT ip FROM us_ip_blacklist WHERE id = ?', [$v])->first();
+            logger($user->data()->id, 'Setting Change', 'Deleted '.$ip->ip.' from blacklist');
+            $db->deleteById('us_ip_blacklist', $v);
+        }
+        Redirect::to($us_url_root.'users/admin.php?view=ip&err=IP(s) Deleted');
     }
-    foreach ($_POST['deleteblack'] as $k => $v) {
-      $ip = $db->query("SELECT ip FROM us_ip_blacklist WHERE id = ?", array($v))->first();
-      logger($user->data()->id, "Setting Change", "Deleted " . $ip->ip . " from blacklist");
-      $db->deleteById('us_ip_blacklist', $v);
-    }
-    Redirect::to($us_url_root . 'users/admin.php?view=ip&err=IP(s) Deleted');
-  }
 }
 ?>
 

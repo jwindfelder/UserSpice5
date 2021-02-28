@@ -1,6 +1,6 @@
 <?php
-require_once("install/includes/header.php");
-require_once("../users/classes/Redirect.php");
+require_once 'install/includes/header.php';
+require_once '../users/classes/Redirect.php';
 ?>
 <div class="container mb-5">
 <div class="row justify-content-center mt-4">
@@ -40,4 +40,4 @@ require_once("../users/classes/Redirect.php");
               </div>
         </div>
     </div>
-<?php require_once("install/includes/footer.php"); ?>
+<?php require_once 'install/includes/footer.php'; ?>

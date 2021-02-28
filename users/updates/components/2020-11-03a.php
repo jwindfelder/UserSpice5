@@ -9,7 +9,7 @@ $db->query("ALTER TABLE settings ADD COLUMN container_open_class varchar(255) NU
 if (!$db->error()) {
     logger(1, 'System Updates', 'Added container_open_class column to settings table');
 } else {
-    ++$countE;
+    $countE++;
     logger(1, 'System Updates', 'Failed to add container_open_class column to settings table', json_encode(['ERROR' => $db->errorString()]));
 }
 

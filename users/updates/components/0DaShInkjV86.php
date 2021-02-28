@@ -5,16 +5,16 @@
 //Release Date 2019-04-27
 //Rewrote 2019-04-27 DH
 
-$countE=0;
-$db->query("DROP TABLE IF EXISTS us_management");
+$countE = 0;
+$db->query('DROP TABLE IF EXISTS us_management');
 
-$db->query("CREATE TABLE `us_management` (
+$db->query('CREATE TABLE `us_management` (
   `id` int(11) NOT NULL,
   `page` varchar(255) NOT NULL,
   `view` varchar(255) NOT NULL,
   `feature` varchar(255) NOT NULL,
   `access` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1");
+) ENGINE=InnoDB DEFAULT CHARSET=latin1');
 
 $db->query("INSERT INTO `us_management` (`id`, `page`, `view`, `feature`, `access`) VALUES
 (1, '_admin_manage_ip.php', 'ip', 'IP Whitelist/Blacklist', ''),
@@ -33,29 +33,29 @@ $db->query("INSERT INTO `us_management` (`id`, `page`, `view`, `feature`, `acces
 (14, '_admin_user.php', 'user', 'User Management', ''),
 (15, '_admin_users.php', 'users', 'User Management', '')");
 
-$db->query("ALTER TABLE `us_management`
-  ADD PRIMARY KEY (`id`)");
+$db->query('ALTER TABLE `us_management`
+  ADD PRIMARY KEY (`id`)');
 
-$db->query("ALTER TABLE `us_management`
+$db->query('ALTER TABLE `us_management`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-COMMIT");
+COMMIT');
 
-if($countE==0) {
-  $db->insert('updates',['migration'=>$update]);
-  if(!$db->error()) {
-    if($db->count()>0) {
-      logger(1,"System Updates","Update $update successfully deployed.");
-      $successes[] = "Update $update successfully deployed.";
+if ($countE == 0) {
+    $db->insert('updates', ['migration'=>$update]);
+    if (!$db->error()) {
+        if ($db->count() > 0) {
+            logger(1, 'System Updates', "Update $update successfully deployed.");
+            $successes[] = "Update $update successfully deployed.";
+        } else {
+            logger(1, 'System Updates', "Update $update unable to be marked complete, query was successful but no database entry was made.");
+            $errors[] = 'Update '.$update.' unable to be marked complete, query was successful but no database entry was made.';
+        }
     } else {
-      logger(1,"System Updates","Update $update unable to be marked complete, query was successful but no database entry was made.");
-      $errors[] = "Update ".$update." unable to be marked complete, query was successful but no database entry was made.";
+        $error = $db->errorString();
+        logger(1, 'System Updates', "Update $update unable to be marked complete, Error: ".$error);
+        $errors[] = "Update $update unable to be marked complete, Error: ".$error;
     }
-  } else {
-    $error=$db->errorString();
-    logger(1,"System Updates","Update $update unable to be marked complete, Error: ".$error);
-    $errors[] = "Update $update unable to be marked complete, Error: ".$error;
-  }
 } else {
-  logger(1,"System Updates","Update $update unable to be marked complete");
-  $errors[] = "Update $update unable to be marked complete";
+    logger(1, 'System Updates', "Update $update unable to be marked complete");
+    $errors[] = "Update $update unable to be marked complete";
 }

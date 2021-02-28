@@ -13,65 +13,67 @@
 </header>
 <?php
 $errors = $successes = [];
-$form_valid=TRUE;
+$form_valid = true;
 //Forms posted
 if (!empty($_POST)) {
-  $token = $_POST['csrf'];
-  if(!Token::check($token)){
-    include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
-  }
-
-  if(!empty($_POST['addCron'])) {
-    $name = Input::get('name');
-    $file = Input::get('file');
-    $sort = Input::get('sort');
-
-    $form_valid=FALSE; // assume the worst
-    $validation = new Validate();
-    $validation->check($_POST,array(
-      'name' => array(
-        'display' => 'Name',
-        'required' => true,
-        'min' => 2,
-        'max' => 35,
-      ),
-      'file' => array(
-        'display' => 'File',
-        'required' => true,
-        'min' => 2,
-        'max' => 35,
-      ),
-      'sort' => array(
-        'display' => 'Sort',
-        'required' => true,
-      ),
-    ));
-    if($validation->passed()) {
-      $form_valid=TRUE;
-      try {
-        $fields=array(
-          'name' => Input::get('name'),
-          'file' => Input::get('file'),
-          'sort' => Input::get('sort'),
-          'createdby' => $user->data()->id,
-        );
-        $db->insert('crons',$fields);
-        $successes[] = "Cron Added";
-        logger($user->data()->id,"Cron Manager","Added cron named $name.");
-
-      } catch (Exception $e) {
-        die($e->getMessage());
-      }
-
+    $token = $_POST['csrf'];
+    if (!Token::check($token)) {
+        include $abs_us_root.$us_url_root.'usersc/scripts/token_error.php';
     }
-  } }
-  $query = $db->query("SELECT * FROM crons ORDER BY sort,active DESC,id ASC");
+
+    if (!empty($_POST['addCron'])) {
+        $name = Input::get('name');
+        $file = Input::get('file');
+        $sort = Input::get('sort');
+
+        $form_valid = false; // assume the worst
+        $validation = new Validate();
+        $validation->check($_POST, [
+            'name' => [
+                'display'  => 'Name',
+                'required' => true,
+                'min'      => 2,
+                'max'      => 35,
+            ],
+            'file' => [
+                'display'  => 'File',
+                'required' => true,
+                'min'      => 2,
+                'max'      => 35,
+            ],
+            'sort' => [
+                'display'  => 'Sort',
+                'required' => true,
+            ],
+        ]);
+        if ($validation->passed()) {
+            $form_valid = true;
+
+            try {
+                $fields = [
+                    'name'      => Input::get('name'),
+                    'file'      => Input::get('file'),
+                    'sort'      => Input::get('sort'),
+                    'createdby' => $user->data()->id,
+                ];
+                $db->insert('crons', $fields);
+                $successes[] = 'Cron Added';
+                logger($user->data()->id, 'Cron Manager', "Added cron named $name.");
+            } catch (Exception $e) {
+                exit($e->getMessage());
+            }
+        }
+    }
+}
+  $query = $db->query('SELECT * FROM crons ORDER BY sort,active DESC,id ASC');
   $count = $query->count();
   ?>
   <div class="content mt-3">
-    <?=resultBlock($errors,$successes);?>
+    <?=resultBlock($errors, $successes); ?>
     <h2>Cron Manager</h2>
-    <?php if($settings->cron_ip == 'off'){echo "<p class='text-dark'><b>Your cron jobs are currently disabled by the system. With great power, comes the need for great responsibility. Please see the note at the bottom of this page.</b></p>";} ?>
+    <?php if ($settings->cron_ip == 'off') {
+      echo "<p class='text-dark'><b>Your cron jobs are currently disabled by the system. With great power, comes the need for great responsibility. Please see the note at the bottom of this page.</b></p>";
+  } ?>
     <div class="card">
       <div class="card-body">
     <div class="float-right mb-2">
@@ -89,30 +91,29 @@ if (!empty($_POST)) {
               <th class="text-center">Functions</th>
             </tr>
             <?php
-            if($count > 0)
-            {
-              foreach ($query->results() as $row){ ?>
-                <tr <?php if($row->active==0) {?> class="bg-light"<?php } ?>>
-                  <td class="text-center"><?=$row->id;?></td>
+            if ($count > 0) {
+                foreach ($query->results() as $row) { ?>
+                <tr <?php if ($row->active == 0) {?> class="bg-light"<?php } ?>>
+                  <td class="text-center"><?=$row->id; ?></td>
                   <td class="text-center">
-                  <p data-field="active" id="active" class="cronactive nounderline" data-input="select" data-id="<?=$row->id;?>"><?php if($row->active==0) {?>Inactive<?php } if($row->active==1) {?>Active <?php } ?></p></td>
-                    <td><p data-field="name" class="cronname nounderline txt text-center" data-input="input" data-id="<?=$row->id;?>" data-title="Rename Cron ID <?=$row->id;?>"><?=$row->name;?></p></td>
-                    <td><p data-field="file" class="cronfile nounderline txt text-center" data-input="input" data-id="<?=$row->id;?>" data-title="Change File for <?=$row->name;?>"><?=$row->file;?></p></td>
-                    <td><p data-field="sort" class="cronsort nounderline txt text-center" data-input="input" data-id="<?=$row->id;?>" data-title="Change sort for <?=$row->name;?>"><?=$row->sort;?></p></td>
-                    <td class="text-center"><?=echousername($row->createdby);?></td>
+                  <p data-field="active" id="active" class="cronactive nounderline" data-input="select" data-id="<?=$row->id; ?>"><?php if ($row->active == 0) {?>Inactive<?php } if ($row->active == 1) {?>Active <?php } ?></p></td>
+                    <td><p data-field="name" class="cronname nounderline txt text-center" data-input="input" data-id="<?=$row->id; ?>" data-title="Rename Cron ID <?=$row->id; ?>"><?=$row->name; ?></p></td>
+                    <td><p data-field="file" class="cronfile nounderline txt text-center" data-input="input" data-id="<?=$row->id; ?>" data-title="Change File for <?=$row->name; ?>"><?=$row->file; ?></p></td>
+                    <td><p data-field="sort" class="cronsort nounderline txt text-center" data-input="input" data-id="<?=$row->id; ?>" data-title="Change sort for <?=$row->name; ?>"><?=$row->sort; ?></p></td>
+                    <td class="text-center"><?=echousername($row->createdby); ?></td>
                     <td class="text-center">
-                      <?php $ranQ = $db->query("SELECT datetime,user_id FROM crons_logs WHERE cron_id = ? ORDER BY datetime DESC",array($row->id));
+                      <?php $ranQ = $db->query('SELECT datetime,user_id FROM crons_logs WHERE cron_id = ? ORDER BY datetime DESC', [$row->id]);
                       $ranCount = $ranQ->count();
-                      if($ranCount > 0) {
-                        $ranResult = $ranQ->first();?>
-                        <?=$ranResult->datetime;?> (<?=echousername($ranResult->user_id);?>)<?php } else { ?><i>Never</i><?php } ?></td>
+                      if ($ranCount > 0) {
+                          $ranResult = $ranQ->first(); ?>
+                        <?=$ranResult->datetime; ?> (<?=echousername($ranResult->user_id); ?>)<?php
+                      } else { ?><i>Never</i><?php } ?></td>
                         <td class="text-center">
                           <button type="button" name="button" id="deleteCron" data-value="<?=$row->id?>" class="btn btn-danger">Delete</button>
                         </td>
                       </tr><?php
-                    } }
-                    else
-                    { ?>
+                    }
+            } else { ?>
                       <tr><td colspan='7' class="text-center">No Cron Jobs</td></tr>
                     <?php }
                     ?>
@@ -120,7 +121,7 @@ if (!empty($_POST)) {
                 </div>
               </div>
               <br />
-              <?php if($settings->cron_ip == 'off'){ ?>
+              <?php if ($settings->cron_ip == 'off') { ?>
                 <strong>Note:</strong>
                 A cron job is an automated task which allows you to perform powerful tasks without your interaction.  Before implementing cron jobs,
                 you want to do some thinking about security.  In almost all circumstances, you do not want someone to be able to type <?=$_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$us_url_root.'users/cron/cron.php'?>
@@ -154,7 +155,7 @@ if (!empty($_POST)) {
                       </div>
                       <div class="modal-footer">
                         <div class="btn-group">
-                          <input type="hidden" name="csrf" value="<?=Token::generate();?>" />
+                          <input type="hidden" name="csrf" value="<?=Token::generate(); ?>" />
                           <input class='btn btn-info mr-2' type='submit' name="addCron" value='Add Cron' class='submit' />
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>

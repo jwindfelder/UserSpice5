@@ -1,4 +1,5 @@
 <?php
+
 // This script is really useful for doing additional things when a user is created.
 
 // You have access to two things that will really be helpful.

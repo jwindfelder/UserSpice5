@@ -9,7 +9,7 @@ $db->query('ALTER TABLE logs ADD COLUMN metadata blob NULL');
 if (!$db->error()) {
     logger(1, 'System Updates', 'Added metadata column to logs table');
 } else {
-    ++$countE;
+    $countE++;
     logger(1, 'System Updates', 'Failed to add metadata column to logs table [ERROR] '.$db->errorString());
 }
 

@@ -7,11 +7,11 @@ $countE = 0;
 $db->query("ALTER TABLE users
 ALTER language SET DEFAULT 'en-US'");
 
-$users = $db->query("SELECT id,language FROM users")->results();
-foreach($users as $u){
-	if(substr($u->language,1,2) =='en'){
-	$db->update('users',$u->id,['language'=>'en-US']);
-}
+$users = $db->query('SELECT id,language FROM users')->results();
+foreach ($users as $u) {
+    if (substr($u->language, 1, 2) == 'en') {
+        $db->update('users', $u->id, ['language'=>'en-US']);
+    }
 }
 
 if ($countE == 0) {

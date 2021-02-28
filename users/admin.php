@@ -25,7 +25,7 @@ require_once '../users/init.php';
 include $abs_us_root.$us_url_root.'users/includes/dashboard_language.php';
 $db = DB::getInstance();
 if (!securePage($_SERVER['PHP_SELF'])) {
-    die();
+    exit();
 }
 $settings = $db->query('SELECT * FROM settings')->first();
 ?>

@@ -50,99 +50,100 @@ if (!empty($_POST)) {
         $form_valid = false; // assume the worst
         if ($settings->auto_assign_un == 0) {
             $validation->check($_POST, [
-        'username' => [
-          'display' => 'Username',
-          'required' => true,
-          'min' => $settings->min_un,
-          'max' => $settings->max_un,
-          'unique' => 'users',
-        ],
-        'fname' => [
-          'display' => 'First Name',
-          'required' => true,
-          'min' => 1,
-          'max' => 100,
-        ],
-        'lname' => [
-          'display' => 'Last Name',
-          'required' => true,
-          'min' => 1,
-          'max' => 100,
-        ],
-        'email' => [
-          'display' => 'Email',
-          'required' => true,
-          'valid_email' => true,
-          'unique' => 'users',
-          'min' => 5,
-          'max' => 100,
-        ],
+                'username' => [
+                    'display'  => 'Username',
+                    'required' => true,
+                    'min'      => $settings->min_un,
+                    'max'      => $settings->max_un,
+                    'unique'   => 'users',
+                ],
+                'fname' => [
+                    'display'  => 'First Name',
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 100,
+                ],
+                'lname' => [
+                    'display'  => 'Last Name',
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 100,
+                ],
+                'email' => [
+                    'display'     => 'Email',
+                    'required'    => true,
+                    'valid_email' => true,
+                    'unique'      => 'users',
+                    'min'         => 5,
+                    'max'         => 100,
+                ],
 
-        'password' => [
-          'display' => 'Password',
-          'required' => true,
-          'min' => $settings->min_pw,
-          'max' => $settings->max_pw,
-        ],
-        'confirm' => [
-          'display' => 'Confirm Password',
-          'required' => true,
-          'matches' => 'password',
-        ],
-      ]);
+                'password' => [
+                    'display'  => 'Password',
+                    'required' => true,
+                    'min'      => $settings->min_pw,
+                    'max'      => $settings->max_pw,
+                ],
+                'confirm' => [
+                    'display'  => 'Confirm Password',
+                    'required' => true,
+                    'matches'  => 'password',
+                ],
+            ]);
         }
         if ($settings->auto_assign_un == 1) {
             $validation->check($_POST, [
-          'fname' => [
-            'display' => 'First Name',
-            'required' => true,
-            'min' => 1,
-            'max' => 60,
-          ],
-          'lname' => [
-            'display' => 'Last Name',
-            'required' => true,
-            'min' => 1,
-            'max' => 60,
-          ],
-          'email' => [
-            'display' => 'Email',
-            'required' => true,
-            'valid_email' => true,
-            'unique' => 'users',
-          ],
+                'fname' => [
+                    'display'  => 'First Name',
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 60,
+                ],
+                'lname' => [
+                    'display'  => 'Last Name',
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 60,
+                ],
+                'email' => [
+                    'display'     => 'Email',
+                    'required'    => true,
+                    'valid_email' => true,
+                    'unique'      => 'users',
+                ],
 
-          'password' => [
-            'display' => 'Password',
-            'required' => true,
-            'min' => $settings->min_pw,
-            'max' => $settings->max_pw,
-          ],
-          'confirm' => [
-            'display' => 'Confirm Password',
-            'required' => true,
-            'matches' => 'password',
-          ],
-        ]);
+                'password' => [
+                    'display'  => 'Password',
+                    'required' => true,
+                    'min'      => $settings->min_pw,
+                    'max'      => $settings->max_pw,
+                ],
+                'confirm' => [
+                    'display'  => 'Confirm Password',
+                    'required' => true,
+                    'matches'  => 'password',
+                ],
+            ]);
         }
         if ($validation->passed()) {
             $form_valid = true;
+
             try {
                 // echo "Trying to create user";
                 $fields = [
-            'username' => $username,
-            'fname' => ucfirst(Input::get('fname')),
-            'lname' => ucfirst(Input::get('lname')),
-            'email' => Input::get('email'),
-            'password' => password_hash(Input::get('password'), PASSWORD_BCRYPT, ['cost' => 12]),
-            'permissions' => 1,
-            'join_date' => $join_date,
-            'email_verified' => 1,
-            'vericode' => randomstring(15),
-            'force_pr' => $settings->force_pr,
-            'vericode_expiry' => $vericode_expiry,
-            'oauth_tos_accepted' => true,
-          ];
+                    'username'           => $username,
+                    'fname'              => ucfirst(Input::get('fname')),
+                    'lname'              => ucfirst(Input::get('lname')),
+                    'email'              => Input::get('email'),
+                    'password'           => password_hash(Input::get('password'), PASSWORD_BCRYPT, ['cost' => 12]),
+                    'permissions'        => 1,
+                    'join_date'          => $join_date,
+                    'email_verified'     => 1,
+                    'vericode'           => randomstring(15),
+                    'force_pr'           => $settings->force_pr,
+                    'vericode_expiry'    => $vericode_expiry,
+                    'oauth_tos_accepted' => true,
+                ];
 
                 $activeCheck = $db->query('SELECT active FROM users');
                 if (!$activeCheck->error()) {
@@ -159,15 +160,15 @@ if (!empty($_POST)) {
                 if (isset($_POST['sendEmail'])) {
                     $userDetails = fetchUserDetails(null, null, $theNewId);
                     $params = [
-              'username' => $username,
-              'password' => Input::get('password'),
-              'sitename' => $settings->site_name,
-              'force_pr' => $settings->force_pr,
-              'fname' => Input::get('fname'),
-              'email' => rawurlencode($userDetails->email),
-              'vericode' => $userDetails->vericode,
-              'join_vericode_expiry' => $settings->join_vericode_expiry,
-            ];
+                        'username'             => $username,
+                        'password'             => Input::get('password'),
+                        'sitename'             => $settings->site_name,
+                        'force_pr'             => $settings->force_pr,
+                        'fname'                => Input::get('fname'),
+                        'email'                => rawurlencode($userDetails->email),
+                        'vericode'             => $userDetails->vericode,
+                        'join_vericode_expiry' => $settings->join_vericode_expiry,
+                    ];
                     $to = rawurlencode($email);
                     $subject = html_entity_decode($settings->site_name, ENT_QUOTES);
                     $body = email_body('_email_adminUser.php', $params);
@@ -176,7 +177,7 @@ if (!empty($_POST)) {
                 logger($user->data()->id, 'User Manager', "Added user $username.");
                 Redirect::to($us_url_root.'users/admin.php?view=user&id='.$theNewId);
             } catch (Exception $e) {
-                die($e->getMessage());
+                exit($e->getMessage());
             }
         }
     }

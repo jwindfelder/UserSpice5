@@ -1,4 +1,6 @@
-<?php if(!in_array($user->data()->id,$master_account)){Redirect::to('admin.php');}
+<?php if (!in_array($user->data()->id, $master_account)) {
+    Redirect::to('admin.php');
+}
 $diag = Input::get('diag');
 
 ?>
@@ -20,114 +22,120 @@ $diag = Input::get('diag');
 
 <div class="content mt-3">
   <?php
-  if ($settings->spice_api != '' && !preg_match("/^[\w]{5}-[\w]{5}-[\w]{5}-[\w]{5}-[\w]{5}$/",$settings->spice_api)) {
-    echo "<h4><font color='red'>The API Key does not appear to be valid.</font> </h4>";
+  if ($settings->spice_api != '' && !preg_match("/^[\w]{5}-[\w]{5}-[\w]{5}-[\w]{5}-[\w]{5}$/", $settings->spice_api)) {
+      echo "<h4><font color='red'>The API Key does not appear to be valid.</font> </h4>";
   }
-  if($diag){
-    echo "<h6>Diagnostic Mode Activated</h6><br>";
-    echo "<h6><font color='red'>Please Note:</font> Additional diagnostic info may be <a href='admin.php?view=logs'>located in the logs</a>.</h6><br>";
+  if ($diag) {
+      echo '<h6>Diagnostic Mode Activated</h6><br>';
+      echo "<h6><font color='red'>Please Note:</font> Additional diagnostic info may be <a href='admin.php?view=logs'>located in the logs</a>.</h6><br>";
   }
   $type = Input::get('type');
-  if($diag && $type == '' && !isset($_POST['goSearch'])){$_POST['goSearch'] = 1 && $_POST['search'] = 'demo plugin';}
-  $api = "https://userspice.com/bugs/api.php";
+  if ($diag && $type == '' && !isset($_POST['goSearch'])) {
+      $_POST['goSearch'] = 1 && $_POST['search'] = 'demo plugin';
+  }
+  $api = 'https://userspice.com/bugs/api.php';
   // $api = "http://localhost/bugs/api.php";
-  if($settings->spice_api != ''){
-    if($diag){ echo "<h6>API Key found.</h6><br>"; }
-    if(!empty($_POST['type'])){
-      //create a new cURL resource
-      $ch = curl_init($api);
-      //setup request to send json via POST
-      $data = array(
-        'key' => $settings->spice_api,
-        'type' => $type,
-        'call' => 'loadtype'
-      );
-      $payload = json_encode($data);
-      if($diag){ echo "<h6>Attempting CURL Request. Will show results below if they exist.</h6><br>"; }
-      //attach encoded JSON string to the POST fields
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-      //set the content type to application/json
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-      //return response instead of outputting
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      //execute the POST request
-      $result = curl_exec($ch);
-      if($diag){
-        echo substr($result,0,150)."<br>";
-        $info = curl_getinfo($ch);
-        echo 'Took '. $info['total_time']. ' seconds to send a request<br>';
-        if(curl_errno($ch))
-        {
-          echo 'Curl error: ' . curl_error($ch);
-        }
+  if ($settings->spice_api != '') {
+      if ($diag) {
+          echo '<h6>API Key found.</h6><br>';
       }
-      //close cURL resource
-      curl_close($ch);
-
-    }
-    if(!empty($_POST['goSearch']) || !empty($_GET['search'])){
-      $search = Input::get('search');
-      // dnd($search);
-      //create a new cURL resource
-      $ch = curl_init($api);
-      //setup request to send json via POST
-      $data = array(
-        'key' => $settings->spice_api,
-        'search' => $search,
-        'call' => 'search'
-      );
-      $payload = json_encode($data);
-      if($diag){ echo "<h6>Attempting CURL Request. Will show results below if they exist.</h6><br>"; }
-      //attach encoded JSON string to the POST fields
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-      //set the content type to application/json
-      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-      //return response instead of outputting
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      //execute the POST request
-      $result = curl_exec($ch);
-      if($diag){
-        echo substr($result,0,150)."<br>";
-        $info = curl_getinfo($ch);
-        echo '<h6>Took '. $info['total_time']. ' seconds to send a request</h6><br>';
-        if(curl_errno($ch))
-        {
-          echo 'Curl error: ' . curl_error($ch);
-        }
+      if (!empty($_POST['type'])) {
+          //create a new cURL resource
+          $ch = curl_init($api);
+          //setup request to send json via POST
+          $data = [
+              'key'  => $settings->spice_api,
+              'type' => $type,
+              'call' => 'loadtype',
+          ];
+          $payload = json_encode($data);
+          if ($diag) {
+              echo '<h6>Attempting CURL Request. Will show results below if they exist.</h6><br>';
+          }
+          //attach encoded JSON string to the POST fields
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+          //set the content type to application/json
+          curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+          //return response instead of outputting
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          //execute the POST request
+          $result = curl_exec($ch);
+          if ($diag) {
+              echo substr($result, 0, 150).'<br>';
+              $info = curl_getinfo($ch);
+              echo 'Took '.$info['total_time'].' seconds to send a request<br>';
+              if (curl_errno($ch)) {
+                  echo 'Curl error: '.curl_error($ch);
+              }
+          }
+          //close cURL resource
+          curl_close($ch);
       }
-      //close cURL resource
-      curl_close($ch);
-
-    }
+      if (!empty($_POST['goSearch']) || !empty($_GET['search'])) {
+          $search = Input::get('search');
+          // dnd($search);
+          //create a new cURL resource
+          $ch = curl_init($api);
+          //setup request to send json via POST
+          $data = [
+              'key'    => $settings->spice_api,
+              'search' => $search,
+              'call'   => 'search',
+          ];
+          $payload = json_encode($data);
+          if ($diag) {
+              echo '<h6>Attempting CURL Request. Will show results below if they exist.</h6><br>';
+          }
+          //attach encoded JSON string to the POST fields
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+          //set the content type to application/json
+          curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+          //return response instead of outputting
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          //execute the POST request
+          $result = curl_exec($ch);
+          if ($diag) {
+              echo substr($result, 0, 150).'<br>';
+              $info = curl_getinfo($ch);
+              echo '<h6>Took '.$info['total_time'].' seconds to send a request</h6><br>';
+              if (curl_errno($ch)) {
+                  echo 'Curl error: '.curl_error($ch);
+              }
+          }
+          //close cURL resource
+          curl_close($ch);
+      }
   }//end if key check
-  else{
-    if($diag){ echo "<h6>No API Key found.</h6><br>"; }
+  else {
+      if ($diag) {
+          echo '<h6>No API Key found.</h6><br>';
+      }
   }
   ?>
 
   <h2>Spice Shaker Auto Installer
-    <?php if(!$diag){ ?>
+    <?php if (!$diag) { ?>
       <button type="button" onclick="window.location.href = 'admin.php?view=spice&diag=1';" name="button" class="btn btn-primary">Enter Diagnostic Mode</button>
-    <?php }else{ ?>
+    <?php } else { ?>
       <button type="button" onclick="window.location.href = 'admin.php?view=spice';" name="button" class="btn btn-primary">Leave Diagnostic Mode</button>
     <?php } ?>
   </h2>
-  <?php if($diag){?>
+  <?php if ($diag) {?>
     <br><h3>Please Install/Update the demo plugin and look at the messages above and in your logs to diagnose API issues.</h3><br>
   <?php } ?>
   Spice Shaker allows you to download and automatically install Updates, Plugins, Templates, Widgets, and Languages for UserSpice.<br>Users with a (free) API key can make 2000 requests a day.<br>
   <?php
   $failed = 0;
-  if(!function_exists('curl_version')){
-    echo "<font color='red'>We see that you do not have CURL installed on your server.  Please make sure it is enabled.</font><br>";
-    $failed = 1;
+  if (!function_exists('curl_version')) {
+      echo "<font color='red'>We see that you do not have CURL installed on your server.  Please make sure it is enabled.</font><br>";
+      $failed = 1;
   }
-  if(!is_writable($abs_us_root.$us_url_root.'users/parsers/checkWrite.php')){
-    echo "<font color='red'>It appears that you cannot write to the users/parsers folder.  If you cannot download plugins, this is why.</font><br>";
-    $failed = 1;
+  if (!is_writable($abs_us_root.$us_url_root.'users/parsers/checkWrite.php')) {
+      echo "<font color='red'>It appears that you cannot write to the users/parsers folder.  If you cannot download plugins, this is why.</font><br>";
+      $failed = 1;
   }
 
-  if($failed == 1){ ?>
+  if ($failed == 1) { ?>
     Please check out <a href="https://userspice.com/spice-shaker-problems/">https://userspice.com/spice-shaker-problems/</a> for some tips to fix Spice Shaker on your server.
   <?php } ?>
   <div class="content mt-3">
@@ -137,9 +145,9 @@ $diag = Input::get('diag');
 
           <label for="gid">UserSpice API Key (
             <a href="https://userspice.com/developer-api-keys/">
-              <?php if($settings->spice_api == ''){
-                echo "<font color='red'><strong>Spice Shaker will not work with out a FREE API Key. Please refresh after pasting your key.</font></strong>";
-              }
+              <?php if ($settings->spice_api == '') {
+      echo "<font color='red'><strong>Spice Shaker will not work with out a FREE API Key. Please refresh after pasting your key.</font></strong>";
+  }
               ?>
               Get One Here</a>
               )</label>
@@ -151,13 +159,13 @@ $diag = Input::get('diag');
               <label for="type">Browse</label>
               <div class="d-flex">
                 <select class="form-control" name="type">
-                  <option value="" disabled <?php if($type ==''){?>selected="Selected"<?php } ?>>--Choose One--</option>
-                  <option value="plugin" <?php if($type =='plugin'){?>selected="Selected"<?php } ?>>Plugins</option>
-                  <option value="template" <?php if($type =='template'){?>selected="Selected"<?php } ?>>Templates</option>
-                  <option value="widget" <?php if($type =='widget'){?>selected="Selected"<?php } ?>>Widgets</option>
-                  <option value="translation" <?php if($type =='translation'){?>selected="Selected"<?php } ?>>Languages</option>
+                  <option value="" disabled <?php if ($type == '') {?>selected="Selected"<?php } ?>>--Choose One--</option>
+                  <option value="plugin" <?php if ($type == 'plugin') {?>selected="Selected"<?php } ?>>Plugins</option>
+                  <option value="template" <?php if ($type == 'template') {?>selected="Selected"<?php } ?>>Templates</option>
+                  <option value="widget" <?php if ($type == 'widget') {?>selected="Selected"<?php } ?>>Widgets</option>
+                  <option value="translation" <?php if ($type == 'translation') {?>selected="Selected"<?php } ?>>Languages</option>
                 </select>
-                <?php if($settings->spice_api != ''){?>
+                <?php if ($settings->spice_api != '') {?>
                   <input type="submit" name="go" value="Go">
                 <?php } ?>
               </div>
@@ -170,7 +178,7 @@ $diag = Input::get('diag');
                <input type="text" name="search" class="form-control" value="" placeholder="Search all addons" autocomplete="new-password">
            </div>
            <div class="col-3">
-               <?php if($settings->spice_api != ''){?>
+               <?php if ($settings->spice_api != '') {?>
                  <input type="submit" name="goSearch" value="Search" required>
                <?php } ?>
            </div>
@@ -178,37 +186,39 @@ $diag = Input::get('diag');
          </div>
          </form>
 
-        <?php if(isset($result)){
-          $dev = json_decode($result);
-          $counter = 0;
-          if(!is_null($dev)){
-            foreach($dev as $d){
-              ?>
+        <?php if (isset($result)) {
+                  $dev = json_decode($result);
+                  $counter = 0;
+                  if (!is_null($dev)) {
+                      foreach ($dev as $d) {
+                          ?>
 
               <div class="col-md-6 col-lg-4 pb-3">
                 <div class="card card-custom bg-white border-white border-0" style="height: 450px">
-                  <div class="card-custom-img" style="background-image: url(<?php if($d->img != ''){echo $d->img;}else{?>http://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg <?php }?>);"></div>
+                  <div class="card-custom-img" style="background-image: url(<?php if ($d->img != '') {
+                              echo $d->img;
+                          } else {?>http://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg <?php } ?>);"></div>
                     <div class="card-custom-avatar">
-                      <?php if($d->icon == ''){
-                        $src = "http://userspice.com/bugs/usersc/logos/nologo.png";
-                      }else{
-                        $src = $d->icon;
-                      }
-                      ?>
+                      <?php if ($d->icon == '') {
+                              $src = 'http://userspice.com/bugs/usersc/logos/nologo.png';
+                          } else {
+                              $src = $d->icon;
+                          } ?>
                       <img class="img-fluid" src="<?=$src?>" alt="Avatar" />
                     </div>
                     <div class="card-body" style="overflow-y: auto">
-                      <h6 class="card-title"><?=$d->project?> v<?=$d->version." (".$d->status.")";?></h6>
+                      <h6 class="card-title"><?=$d->project?> v<?=$d->version.' ('.$d->status.')'; ?></h6>
                       <p><strong><?=ucfirst($d->category)?></strong></p>
                       <p class="card-text"><?=$d->descrip?></p>
                     </div>
                     <div class="card-footer" style="background: inherit; border-color: inherit;">
                       <a href="#" class="btn btn-default install" style="display:none;">Please Wait</a>
                       <?php
-                      if(shakerIsInstalled($d->category,$d->reserved)){
-                        ?>
+                      if (shakerIsInstalled($d->category, $d->reserved)) {
+                          ?>
                         <button type="button" name="button" class="btn btn-danger installme"  data-res="<?=$d->reserved?>" data-type="<?=$d->category?>" data-url="<?=$d->dd?>" data-hash="<?=$d->hash?>" data-counter="<?=$counter?>">Update</button>
-                      <?php }else{ ?>
+                      <?php
+                      } else { ?>
                         <button type="button" name="button" class="btn btn-primary installme"  data-res="<?=$d->reserved?>" data-type="<?=$d->category?>" data-url="<?=$d->dd?>" data-hash="<?=$d->hash?>" data-counter="<?=$counter?>">Download</button>
                       <?php } ?>
                       <a href="https://github.com/<?=$d->repo?>/tree/master/src/<?=$d->reserved?>" class="btn btn-outline-primary" target="_blank">View Source</a>
@@ -219,13 +229,13 @@ $diag = Input::get('diag');
                 </div>
                 <?php
                 $counter++;
-              }
-            }else{
-              ?>
+                      }
+                  } else {
+                      ?>
               <p align="center"><font color="red"><strong>No results found</font></strong></p>
               <?php
-            }
-          }
+                  }
+              }
 
           ?>
       

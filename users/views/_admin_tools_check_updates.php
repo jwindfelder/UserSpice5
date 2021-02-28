@@ -61,10 +61,10 @@ if ($settings->spice_api != '') {
         $ch = curl_init($api);
         //setup request to send json via POST
         $data = [
-      'key' => $settings->spice_api,
-      'sysver' => $user_spice_ver,
-      'call' => 'sysup',
-  ];
+            'key'    => $settings->spice_api,
+            'sysver' => $user_spice_ver,
+            'call'   => 'sysup',
+        ];
         $payload = json_encode($data);
 
         //attach encoded JSON string to the POST fields
@@ -80,18 +80,18 @@ if ($settings->spice_api != '') {
         $result = json_decode($result);
         if (isset($result->next_ver) && $result->next_ver != '') {
             if ($result->bleeding_edge == 1 && $settings->bleeding_edge != 1) {
-                die("$result->next_ver is a bleeding edge update and is not ready for automatic install. Please check back later.");
+                exit("$result->next_ver is a bleeding edge update and is not ready for automatic install. Please check back later.");
             }
             if ($result->no_update > 0) {
                 if ($result->no_update == 1) {
-                    die("$result->next_ver must be installed manually from UserSpice.com/updates");
+                    exit("$result->next_ver must be installed manually from UserSpice.com/updates");
                 } elseif ($result->no_update == 2) {
-                    die('The updater itself must be updated, please install the Updater Plugin and run it from Spice Shaker');
+                    exit('The updater itself must be updated, please install the Updater Plugin and run it from Spice Shaker');
                 }
             } else { //do the update
                 echo "Update found... $result->next_ver released on $result->released.<br>";
-                if(file_exists($abs_us_root.$us_url_root.'usupdate.zip')){
-                unlink($abs_us_root.$us_url_root.'usupdate.zip');
+                if (file_exists($abs_us_root.$us_url_root.'usupdate.zip')) {
+                    unlink($abs_us_root.$us_url_root.'usupdate.zip');
                 }
                 $zipFile = $abs_us_root.$us_url_root.'usupdate.zip';
                 echo 'Creating zip file...';
@@ -125,8 +125,8 @@ if ($settings->spice_api != '') {
                 $zip = new ZipArchive();
 
                 if ($zip->open($zipFile) !== true) {
-                    if(file_exists($zipFile)){
-                    unlink($zipFile);
+                    if (file_exists($zipFile)) {
+                        unlink($zipFile);
                     }
                     echo 'Error :- Unable to open the Zip File';
                     logger(1, "$result->next_ver", 'Unable to open the Zip File');
@@ -142,15 +142,15 @@ if ($settings->spice_api != '') {
                     logger(1, "$result->next_ver", 'Extracting zip file');
                     $zip->close();
                     echo "<br><strong><font color='blue'>$result->message</font></strong>";
-                    if(file_exists($zipFile)){
-                    unlink($zipFile);
+                    if (file_exists($zipFile)) {
+                        unlink($zipFile);
                     }
                     logger(1, "$result->next_ver", $result->message);
                     logger(1, "$result->next_ver", 'Running migration script(s)');
                     Redirect::to($us_url_root.'users/updates/index.php?auto=1');
                 } else {
-                    if(file_exists($zipFile)){
-                    unlink($zipFile);
+                    if (file_exists($zipFile)) {
+                        unlink($zipFile);
                     }
                     logger(1, "$result->next_ver", 'Hash match failed');
                     echo "<br>The hash does not match.  This means one of 2 things. Either the file on the server has been tampered with or (more likely) the file was
@@ -158,8 +158,8 @@ if ($settings->spice_api != '') {
                 }
                 echo '<br>Deleting zip file';
                 logger(1, "$result->next_ver", 'Deleting zip file');
-                if(file_exists($zipFile)){
-                unlink($zipFile);
+                if (file_exists($zipFile)) {
+                    unlink($zipFile);
                 }
             }
         }

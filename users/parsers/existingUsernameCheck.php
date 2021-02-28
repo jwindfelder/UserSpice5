@@ -17,7 +17,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-die(); //This feature has been disabled for security reasons.
+exit(); //This feature has been disabled for security reasons.
 //
 // require_once '../init.php';
 // $db = DB::getInstance();

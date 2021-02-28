@@ -25,34 +25,36 @@ input[type=checkbox]
 </style>
 <div class="content mt-3">
   <?php
-  if(!in_array($user->data()->id, $master_account)){Redirect::to('admin.php');}
-  $features = $db->query("SELECT DISTINCT id, feature, access FROM us_management ORDER BY feature")->results();
-  $adminID = $db->query("SELECT id FROM pages WHERE page = ?",["users/admin.php"])->first();
-  $matches = $db->query("SELECT * FROM permission_page_matches WHERE page_id = ? AND (permission_id != 1 AND permission_id != 2)",[$adminID->id])->results();
+  if (!in_array($user->data()->id, $master_account)) {
+      Redirect::to('admin.php');
+  }
+  $features = $db->query('SELECT DISTINCT id, feature, access FROM us_management ORDER BY feature')->results();
+  $adminID = $db->query('SELECT id FROM pages WHERE page = ?', ['users/admin.php'])->first();
+  $matches = $db->query('SELECT * FROM permission_page_matches WHERE page_id = ? AND (permission_id != 1 AND permission_id != 2)', [$adminID->id])->results();
   $perms = [];
-  foreach($matches as $m){
-    $name = $db->query("SELECT name from permissions WHERE id = ?",[$m->permission_id])->first();
-    $perms[$m->permission_id] = $name->name;
+  foreach ($matches as $m) {
+      $name = $db->query('SELECT name from permissions WHERE id = ?', [$m->permission_id])->first();
+      $perms[$m->permission_id] = $name->name;
   }
 
-  if(!empty($_POST)){
-    $token = $_POST['csrf'];
-    if(!Token::check($token)){
-      include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
-    }
-    foreach($features as $f){
-      $pages = $db->query("SELECT * FROM us_management WHERE feature = ?",[$f->feature])->results();
-      $str = str_replace(" ","_",$f->feature);
-      foreach($pages as $p){
-        if(isset($_POST[$str])){
-          $implode = implode(",",$_POST[$str]);
-          $db->update('us_management',$p->id,['access'=>$implode]);
-        }else{
-          $db->update('us_management',$p->id,['access'=>""]);
-        }
+  if (!empty($_POST)) {
+      $token = $_POST['csrf'];
+      if (!Token::check($token)) {
+          include $abs_us_root.$us_url_root.'usersc/scripts/token_error.php';
       }
-    }
-    Redirect::to('admin.php?view=access&err=Updated');
+      foreach ($features as $f) {
+          $pages = $db->query('SELECT * FROM us_management WHERE feature = ?', [$f->feature])->results();
+          $str = str_replace(' ', '_', $f->feature);
+          foreach ($pages as $p) {
+              if (isset($_POST[$str])) {
+                  $implode = implode(',', $_POST[$str]);
+                  $db->update('us_management', $p->id, ['access'=>$implode]);
+              } else {
+                  $db->update('us_management', $p->id, ['access'=>'']);
+              }
+          }
+      }
+      Redirect::to('admin.php?view=access&err=Updated');
   }
   $token = Token::generate();
   ?>
@@ -74,28 +76,30 @@ input[type=checkbox]
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>Feature</th><?php for($i=1; $i<=count($perms); $i++){ echo '<th></th>'; } ?>
+                  <th>Feature</th><?php for ($i = 1; $i <= count($perms); $i++) {
+      echo '<th></th>';
+  } ?>
                 </tr>
               </thead>
               <tbody>
-                <?php foreach($features as $f){
-                  $row = explode(",",$f->access);
-                  ?>
+                <?php foreach ($features as $f) {
+      $row = explode(',', $f->access); ?>
                   <tr>
                     <td><?=$f->feature?></td>
-                    <?php foreach($perms as $key=>$value){
-                      $isChecked = in_array($key,$row) ? "checked" : "";
-                      $elId = $f->id . '-' . $key;
-                      ?>
+                    <?php foreach ($perms as $key=>$value) {
+          $isChecked = in_array($key, $row) ? 'checked' : '';
+          $elId = $f->id.'-'.$key; ?>
                       <td>
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" name="<?=$f->feature?>[]" value="<?=$key?>" <?=$isChecked ?> id="<?=$elId?>">
                           <label class="form-check-label pl-1" for="<?=$elId?>"><?=$value?></label>
                         </div>
                       </td>
-                    <?php } ?>
+                    <?php
+      } ?>
                   </tr>
-                <?php } ?>
+                <?php
+  } ?>
               </tbody>
             </table>
             <div class="d-block text-right pt-1">

@@ -5,16 +5,13 @@
 
 $countE = 0;
 
-
-
-
 $db->query('ALTER TABLE users ALTER account_owner SET DEFAULT 1');
-$zeros = $db->query("UPDATE users SET account_owner = ? WHERE account_owner = ?",[1,0]);
+$zeros = $db->query('UPDATE users SET account_owner = ? WHERE account_owner = ?', [1, 0]);
 
 if (!$db->error()) {
     logger(1, 'System Updates', 'Set a default for account owner');
 } else {
-    ++$countE;
+    $countE++;
     logger(1, 'System Updates', 'Failed to set default for account owner [ERROR] '.$db->errorString());
 }
 

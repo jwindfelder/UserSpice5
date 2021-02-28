@@ -39,19 +39,20 @@ if (!function_exists('ipCheckBan')) {
         if ($ban > 0) {
             $unban = $db->query('SELECT id FROM us_ip_whitelist WHERE ip = ?', [$ip])->count();
             if ($unban == 0) {
-              //on blacklist and not on whitelist
+                //on blacklist and not on whitelist
                 logger(0, 'IP Logging', 'Blacklisted '.$ip.' attempted visit');
                 if ($eventhooks = getMyHooks(['page' => 'hitBanned'])) {
                     includeHook($eventhooks, 'body');
                 }
+
                 return true;
-            }else{
-              //blacklisted but also whitelisted and whitelist prevails
-              return false;
+            } else {
+                //blacklisted but also whitelisted and whitelist prevails
+                return false;
             }
         } else {
-          //not on blacklist
-          return false;
+            //not on blacklist
+            return false;
         }
     }
 }
@@ -62,7 +63,7 @@ if (!function_exists('randomstring')) {
         $len = $len++;
         $string = '';
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for ($i = 0; $i < $len; ++$i) {
+        for ($i = 0; $i < $len; $i++) {
             $string .= substr($chars, rand(0, strlen($chars)), 1);
         }
 
@@ -126,7 +127,7 @@ if (!function_exists('addGroupsMenus')) {
             foreach ((array) $menu_ids as $menu_id) {
                 //echo "<pre>DEBUG: AGM: group_id=$group_id, menu_id=$menu_id</pre><br />\n";
                 if ($db->query($sql, [$group_id, $menu_id])) {
-                    ++$i;
+                    $i++;
                 }
             }
         }
@@ -248,7 +249,7 @@ if (!function_exists('lang')) {
                 $iteration = 1;
                 foreach ($markers as $marker) {
                     $str = str_replace('%m'.$iteration.'%', $marker, $str);
-                    ++$iteration;
+                    $iteration++;
                 }
             } else {
                 $str = '';
@@ -284,7 +285,7 @@ if (!function_exists('lang')) {
                         $iteration = 1;
                         foreach ($markers as $marker) {
                             $str = str_replace('%m'.$iteration.'%', $marker, $str);
-                            ++$iteration;
+                            $iteration++;
                         }
                     } else {
                         $str = '';
@@ -508,13 +509,13 @@ if (!function_exists('logger')) {
         $db = DB::getInstance();
 
         $fields = [
-      'user_id' => $user_id,
-      'logdate' => date('Y-m-d H:i:s'),
-      'logtype' => $logtype,
-      'lognote' => $lognote,
-      'ip' => $_SERVER['REMOTE_ADDR'],
-      'metadata' => $metadata,
-    ];
+            'user_id'  => $user_id,
+            'logdate'  => date('Y-m-d H:i:s'),
+            'logtype'  => $logtype,
+            'lognote'  => $lognote,
+            'ip'       => $_SERVER['REMOTE_ADDR'],
+            'metadata' => $metadata,
+        ];
         $db->insert('logs', $fields);
         $lastId = $db->lastId();
 
@@ -677,7 +678,7 @@ if (!function_exists('echodatetime')) {
             $responseAr['success'] = true;
             $responseAr['error'] = true;
             $responseAr['errorMsg'] = $errorMsg;
-            die(json_encode($responseAr));
+            exit(json_encode($responseAr));
         }
     }
 
@@ -735,7 +736,7 @@ if (!function_exists('echodatetime')) {
                     $db->query("UPDATE notifications SET is_archived = 1 WHERE id = $id");
                     logger($user_id, 'Notifications - Admin', "Deleted Notification ID #$id.");
                 }
-                ++$i;
+                $i++;
             }
 
             return $i;
@@ -795,7 +796,7 @@ if (!function_exists('echodatetime')) {
           $self_path_length = count($self_path);
           $file_found = false;
 
-          for ($i = 1; $i < $self_path_length; ++$i) {
+          for ($i = 1; $i < $self_path_length; $i++) {
               array_splice($self_path, $self_path_length - $i, $i);
               // $us_url_root=implode("/",$self_path)."/";
 
@@ -875,7 +876,7 @@ if (!function_exists('echodatetime')) {
                       $db->query('UPDATE us_user_sessions SET UserSessionEnded=1,UserSessionEnded_Time=NOW() WHERE kUserSessionID = ?', [$session]);
                   }
                   if (!$db->error()) {
-                      ++$i;
+                      $i++;
                       logger($user->data()->id, 'User Tracker', "Killed Session ID#$session");
                   } else {
                       $error = $db->errorString();
@@ -977,7 +978,7 @@ if (!function_exists('echodatetime')) {
               } else {
                   $final = $opts['final'];
                   $c = count($data);
-                  for ($i = 0; $i <= $c; ++$i) {
+                  for ($i = 0; $i <= $c; $i++) {
                       if (isset($data[$i])) {
                           if ($i == $c - 1) {
                               $msg .= ' '.$final.' ';
@@ -1005,7 +1006,7 @@ if (!function_exists('echodatetime')) {
           $self_path_length = count($self_path);
           $file_found = false;
 
-          for ($i = 1; $i < $self_path_length; ++$i) {
+          for ($i = 1; $i < $self_path_length; $i++) {
               array_splice($self_path, $self_path_length - $i, $i);
 
               if (file_exists($abs_us_root.$us_url_root.'z_us_root.php')) {
@@ -1090,7 +1091,7 @@ if (!function_exists('echodatetime')) {
                   $count = 0;
                   $set = '';
                   foreach ($_POST as $k => $v) {
-                      ++$count;
+                      $count++;
 
                       if ($count != 3) {
                           continue;
@@ -1163,7 +1164,7 @@ if (!function_exists('echodatetime')) {
               } elseif ($h->position == 'bottom') {
                   $data['bottom'][$counter] = $h->folder.'/'.$h->hook;
               }
-              ++$counter;
+              $counter++;
           }
 
           return $data;
@@ -1200,11 +1201,11 @@ if (!function_exists('echodatetime')) {
                       continue;
                   }
                   $fields = [
-            'page' => $k,
-            'folder' => $plugin_name,
-            'position' => $key,
-            'hook' => $value,
-          ];
+                      'page'     => $k,
+                      'folder'   => $plugin_name,
+                      'position' => $key,
+                      'hook'     => $value,
+                  ];
                   $db->insert('us_plugin_hooks', $fields);
               }
           }
@@ -1256,7 +1257,7 @@ if (!function_exists('echodatetime')) {
           $self_path_length = count($self_path);
           $file_found = false;
 
-          for ($i = 1; $i < $self_path_length; ++$i) {
+          for ($i = 1; $i < $self_path_length; $i++) {
               array_splice($self_path, $self_path_length - $i, $i);
               $us_url_root = implode('/', $self_path).'/';
 

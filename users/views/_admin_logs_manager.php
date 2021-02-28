@@ -25,48 +25,48 @@
 
 <?php
 $errors = $successes = [];
-$form_valid=TRUE;
+$form_valid = true;
 //Forms posted
 if (!empty($_POST)) {
-  $token = $_POST['csrf'];
-  if(!Token::check($token)){
-    include($abs_us_root.$us_url_root.'usersc/scripts/token_error.php');
-  }
-  if(!empty($_POST['addLog'])) {
-    $name = Input::get('name');
-
-    $form_valid=FALSE; // assume the worst
-    $validation = new Validate();
-    $validation->check($_POST,array(
-      'name' => array(
-        'display' => 'Type',
-        'required' => true,
-        'min' => 2,
-        'max' => 255,
-      ),
-    ));
-    if($validation->passed()) {
-      $form_valid=TRUE;
-      try {
-        $fields=array(
-          'name' => Input::get('name'),
-          'createdby' => $user->data()->id,
-          'created' => date("Y-m-d H:i:s")
-        );
-        $db->insert('logs_exempt',$fields);
-
-        $logname=("System");
-        $lognote=("Added Log Type Exemption for $name");
-        logger($user->data()->id,$logname,$lognote);
-        $successes[] = lang("ADDED_LOG");
-
-      } catch (Exception $e) {
-        die($e->getMessage());
-      }
-
+    $token = $_POST['csrf'];
+    if (!Token::check($token)) {
+        include $abs_us_root.$us_url_root.'usersc/scripts/token_error.php';
     }
-  } }
-  $query = $db->query("SELECT *,COUNT(*) AS count FROM logs GROUP BY logtype ORDER BY count DESC,logtype");
+    if (!empty($_POST['addLog'])) {
+        $name = Input::get('name');
+
+        $form_valid = false; // assume the worst
+        $validation = new Validate();
+        $validation->check($_POST, [
+            'name' => [
+                'display'  => 'Type',
+                'required' => true,
+                'min'      => 2,
+                'max'      => 255,
+            ],
+        ]);
+        if ($validation->passed()) {
+            $form_valid = true;
+
+            try {
+                $fields = [
+                    'name'      => Input::get('name'),
+                    'createdby' => $user->data()->id,
+                    'created'   => date('Y-m-d H:i:s'),
+                ];
+                $db->insert('logs_exempt', $fields);
+
+                $logname = ('System');
+                $lognote = ("Added Log Type Exemption for $name");
+                logger($user->data()->id, $logname, $lognote);
+                $successes[] = lang('ADDED_LOG');
+            } catch (Exception $e) {
+                exit($e->getMessage());
+            }
+        }
+    }
+}
+  $query = $db->query('SELECT *,COUNT(*) AS count FROM logs GROUP BY logtype ORDER BY count DESC,logtype');
   $count = $query->count();
   ?>
 
@@ -85,21 +85,22 @@ if (!empty($_POST)) {
               <th><center>Mapper Function</center></th>
             </tr>
             <?php
-            if($count > 0)
-            {
-              foreach ($query->results() as $row){ ?>
+            if ($count > 0) {
+                foreach ($query->results() as $row) { ?>
                 <tr>
-                  <td><center><?=$row->logtype;?></center></td>
-                  <td><center><?=$row->count;?></center></td>
-                  <?php $exempt = $db->query("SELECT name FROM logs_exempt WHERE name = ?",array($row->logtype));
-                  if($exempt->count() > 0) $exp = 1;
-                  else $exp = 0; ?>
-                  <td><center><a href="#" data-name="exempt" id="exempt" data-value="<?=$exp?>" class="exempt nounderline" data-mode="popup" data-type="select" data-pk="<?=$row->logtype;?>" data-url="admin_logs_exempt.php" data-title="Do you wish to exempt logs for <?=$row->logtype;?>?"><?php if($exempt->count() > 0) {?>Yes<?php } else {?> No<?php } ?></a></center></td>
-                  <td><center><a href="#" data-name="mapper" id="mapper" class="mapper nounderline" data-mode="popup" data-type="select" data-pk="<?=$row->logtype;?>" data-url="admin_logs_mapper.php" data-title="What would you like to map <?=$row->logtype;?> as?">Map</a></center></td>
+                  <td><center><?=$row->logtype; ?></center></td>
+                  <td><center><?=$row->count; ?></center></td>
+                  <?php $exempt = $db->query('SELECT name FROM logs_exempt WHERE name = ?', [$row->logtype]);
+                  if ($exempt->count() > 0) {
+                      $exp = 1;
+                  } else {
+                      $exp = 0;
+                  } ?>
+                  <td><center><a href="#" data-name="exempt" id="exempt" data-value="<?=$exp?>" class="exempt nounderline" data-mode="popup" data-type="select" data-pk="<?=$row->logtype; ?>" data-url="admin_logs_exempt.php" data-title="Do you wish to exempt logs for <?=$row->logtype; ?>?"><?php if ($exempt->count() > 0) {?>Yes<?php } else {?> No<?php } ?></a></center></td>
+                  <td><center><a href="#" data-name="mapper" id="mapper" class="mapper nounderline" data-mode="popup" data-type="select" data-pk="<?=$row->logtype; ?>" data-url="admin_logs_mapper.php" data-title="What would you like to map <?=$row->logtype; ?> as?">Map</a></center></td>
                 </tr><?php
-              } }
-              else
-              { ?>
+              }
+            } else { ?>
                 <tr><td colspan='4'><center>No Logs</center></td></tr>
               <?php }
               ?>
@@ -126,19 +127,20 @@ if (!empty($_POST)) {
                   <select name="type" class="form-control combobox" required>
                     <option readonly></option>
                     <?php
-                    $typeQuery = $db->query("SELECT logtype FROM logs WHERE logtype NOT IN (SELECT name FROM logs_exempt) GROUP BY logtype");
+                    $typeQuery = $db->query('SELECT logtype FROM logs WHERE logtype NOT IN (SELECT name FROM logs_exempt) GROUP BY logtype');
                     $typeCount = $typeQuery->count();
-                    if($typeCount > 0) {
-                      foreach ($typeQuery->results() as $results) {?>
+                    if ($typeCount > 0) {
+                        foreach ($typeQuery->results() as $results) {?>
                         <option value="<?=$results->logtype?>"><?=$results->logtype?></option>
-                      <?php } } else {?>
+                      <?php }
+                    } else {?>
                         <option readonly>No Options Found</option>
                       <?php } ?>
                     </select>
                     <br />
                   </div>
                   <div class="modal-footer">
-                    <div class="btn-group">	<input type="hidden" name="csrf" value="<?=Token::generate();?>" />
+                    <div class="btn-group">	<input type="hidden" name="csrf" value="<?=Token::generate(); ?>" />
                       <input class='btn btn-info' type='submit' name="addLog" value='Add Exemption' class='submit' /></div>
                     </form>
                     <div class="btn-group"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div>
@@ -164,7 +166,7 @@ if (!empty($_POST)) {
 
             $(".mapper").editable({
               source: [
-                <?php foreach($db->query("SELECT * FROM logs GROUP BY logtype ORDER BY logtype")->results() as $row) {?>
+                <?php foreach ($db->query('SELECT * FROM logs GROUP BY logtype ORDER BY logtype')->results() as $row) {?>
                   {value: "<?=$row->logtype?>", text: "<?=$row->logtype?>"},<?php } ?>
                 ]
               });

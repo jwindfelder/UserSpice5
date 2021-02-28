@@ -80,7 +80,7 @@ if (!function_exists('deleteUsers')) {
             if (file_exists($abs_us_root.$us_url_root.'usersc/scripts/after_user_deletion.php')) {
                 include $abs_us_root.$us_url_root.'usersc/scripts/after_user_deletion.php';
             }
-            ++$i;
+            $i++;
         }
 
         return $i;

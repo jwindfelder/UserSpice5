@@ -209,18 +209,18 @@ if (!function_exists('addPage')) {
             foreach ($permission as $id) {
                 $query = $db->query("INSERT INTO permission_page_matches (
 				permission_id, page_id ) VALUES ( $id , $page )");
-                ++$i;
+                $i++;
             }
         } elseif (is_array($page)) {
             foreach ($page as $id) {
                 $query = $db->query("INSERT INTO permission_page_matches (
 			permission_id, page_id ) VALUES ( $permission , $id )");
-                ++$i;
+                $i++;
             }
         } else {
             $query = $db->query("INSERT INTO permission_page_matches (
 			permission_id, page_id ) VALUES ( $permission , $page )");
-            ++$i;
+            $i++;
         }
 
         return $i;
@@ -242,7 +242,7 @@ if (!function_exists('securePage')) {
         if (isset($user) && $user->data() != null) {
             if ($user->data()->permissions == 0) {
                 Redirect::to($us_url_root.'usersc/scripts/banned.php');
-                die();
+                exit();
             }
         }
         //retrieve page details
@@ -252,7 +252,7 @@ if (!function_exists('securePage')) {
             if (hasPerm([2])) {
                 $setting = $db->query('SELECT page_default_private FROM settings')->first();
                 $fields = [
-                    'page' => $page,
+                    'page'    => $page,
                     'private' => $setting->page_default_private,
                 ];
                 $new = $db->insert('pages', $fields);
@@ -283,7 +283,7 @@ if (!function_exists('securePage')) {
                 Redirect::to($us_url_root.'users/admin.php?view=page&err=Please+confirm+permission+settings.&new=yes&id='.$last.'&dest='.$dest);
             } else {
                 bold('<br><br>You must go into the Admin Panel and click the Manage Pages button to add this page to the database. Doing so will make this error go away.');
-                die();
+                exit();
             }
         }
         $results = $query->first();
@@ -301,7 +301,7 @@ if (!function_exists('securePage')) {
             $fields = [
                 'user' => 0,
                 'page' => $pageID,
-                'ip' => $ip,
+                'ip'   => $ip,
             ];
             $db->insert('audit', $fields);
             require_once $abs_us_root.$us_url_root.'usersc/scripts/not_logged_in.php';
@@ -328,7 +328,7 @@ if (!function_exists('securePage')) {
                 $fields = [
                     'user' => $user->data()->id,
                     'page' => $pageID,
-                    'ip' => $ip,
+                    'ip'   => $ip,
                 ];
                 $db->insert('audit', $fields);
                 require_once $abs_us_root.$us_url_root.'usersc/scripts/did_not_have_permission.php';
@@ -363,10 +363,12 @@ if (!function_exists('fetchPermissionPages')) {
         $db = DB::getInstance();
 
         $query = $db->query(
-        'SELECT m.id as id, m.page_id as page_id, p.page as page, p.private as private
+            'SELECT m.id as id, m.page_id as page_id, p.page as page, p.private as private
 		FROM permission_page_matches AS m
 		INNER JOIN pages AS p ON m.page_id = p.id
-		WHERE m.permission_id = ?', [$permission_id]);
+		WHERE m.permission_id = ?',
+            [$permission_id]
+        );
         $results = $query->results();
 
         return $results;
@@ -380,7 +382,7 @@ if (!function_exists('removePage')) {
         $db = DB::getInstance();
         if (is_array($permissions)) {
             $ids = '';
-            for ($i = 0; $i < count($permissions); ++$i) {
+            for ($i = 0; $i < count($permissions); $i++) {
                 $ids .= $permissions[$i].',';
             }
             $ids = rtrim($ids, ',');
@@ -389,7 +391,7 @@ if (!function_exists('removePage')) {
             }
         } elseif (is_array($pages)) {
             $ids = '';
-            for ($i = 0; $i < count($pages); ++$i) {
+            for ($i = 0; $i < count($pages); $i++) {
                 $ids .= $pages[$i].',';
             }
             $ids = rtrim($ids, ',');
@@ -496,13 +498,13 @@ if (!function_exists('addPermission')) {
         if (is_array($permission_ids)) {
             foreach ($permission_ids as $permission_id) {
                 if ($db->query('INSERT INTO user_permission_matches (user_id,permission_id) VALUES (?,?)', [$members, $permission_id])) {
-                    ++$i;
+                    $i++;
                 }
             }
         } elseif (is_array($members)) {
             foreach ($members as $member) {
                 if ($db->query('INSERT INTO user_permission_matches (user_id,permission_id) VALUES (?,?)', [$member, $permission_ids])) {
-                    ++$i;
+                    $i++;
                 }
             }
         }
@@ -527,7 +529,7 @@ if (!function_exists('deletePermission')) {
                 $query1 = $db->query('DELETE FROM permissions WHERE id = ?', [$id]);
                 $query2 = $db->query('DELETE FROM user_permission_matches WHERE permission_id = ?', [$id]);
                 $query3 = $db->query('DELETE FROM permission_page_matches WHERE permission_id = ?', [$id]);
-                ++$i;
+                $i++;
             }
         }
 

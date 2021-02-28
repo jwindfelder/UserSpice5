@@ -5,29 +5,28 @@
 
 $countE = 0;
 
-
-if(file_exists($abs_us_root.$us_url_root."usersc/scripts/banned.php")){
-$banned = file_get_contents($abs_us_root.$us_url_root."usersc/scripts/banned.php");
-if(strlen($banned) == 461){
-		$newBanned = fopen($abs_us_root.$us_url_root."usersc/scripts/banned.php", "w");
-		$contents = "<?php\n";
-		fwrite($newBanned, $contents);
-		$contents = "require_once '../../users/init.php';\n";
-		fwrite($newBanned, $contents);
-		$contents = "require_once \$abs_us_root.\$us_url_root.'users/includes/template/prep.php';\n";
-		fwrite($newBanned, $contents);
-		$contents = "?>\n";
-		fwrite($newBanned, $contents);
-		$contents = "<h1><?=lang('MAINT_BAN');?></h1>\n";
-		fwrite($newBanned, $contents);
-		$contents = "<?php die(); ?>";
-		fwrite($newBanned, $contents);
-		fclose($newBanned);
-		logger(1, 'System Updates', 'Fixed banned.php file');
-}
-}else{
-      ++$countE;
-      logger(1, 'System Updates', "banned.php was not stock so was not migrated");
+if (file_exists($abs_us_root.$us_url_root.'usersc/scripts/banned.php')) {
+    $banned = file_get_contents($abs_us_root.$us_url_root.'usersc/scripts/banned.php');
+    if (strlen($banned) == 461) {
+        $newBanned = fopen($abs_us_root.$us_url_root.'usersc/scripts/banned.php', 'w');
+        $contents = "<?php\n";
+        fwrite($newBanned, $contents);
+        $contents = "require_once '../../users/init.php';\n";
+        fwrite($newBanned, $contents);
+        $contents = "require_once \$abs_us_root.\$us_url_root.'users/includes/template/prep.php';\n";
+        fwrite($newBanned, $contents);
+        $contents = "?>\n";
+        fwrite($newBanned, $contents);
+        $contents = "<h1><?=lang('MAINT_BAN');?></h1>\n";
+        fwrite($newBanned, $contents);
+        $contents = '<?php die(); ?>';
+        fwrite($newBanned, $contents);
+        fclose($newBanned);
+        logger(1, 'System Updates', 'Fixed banned.php file');
+    }
+} else {
+    $countE++;
+    logger(1, 'System Updates', 'banned.php was not stock so was not migrated');
 }
 
 // if (!$db->error()) {

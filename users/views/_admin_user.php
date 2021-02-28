@@ -29,7 +29,7 @@ $userId = Input::get('id');
 //Check if selected user exists
 if (!userIdExists($userId)) {
     Redirect::to($us_url_root.'users/admin.php?view=users&err=That user does not exist.');
-    die();
+    exit();
 }
 
 $userdetails = fetchUserDetails(null, null, $userId); //Fetch user details
@@ -81,14 +81,14 @@ if (!empty($_POST)) {
             if ($userdetails->username != $displayname) {
                 $fields = ['username' => $displayname];
                 $validation->check($_POST, [
-          'unx' => [
-            'display' => 'Username',
-            'required' => true,
-            'unique_update' => 'users,'.$userId,
-            'min' => $settings->min_un,
-            'max' => $settings->max_un,
-          ],
-        ]);
+                    'unx' => [
+                        'display'       => 'Username',
+                        'required'      => true,
+                        'unique_update' => 'users,'.$userId,
+                        'min'           => $settings->min_un,
+                        'max'           => $settings->max_un,
+                    ],
+                ]);
                 if ($validation->passed()) {
                     $db->update('users', $userId, $fields);
                     $successes[] = 'Username Updated';
@@ -102,13 +102,13 @@ if (!empty($_POST)) {
             if ($userdetails->fname != $fname) {
                 $fields = ['fname' => $fname];
                 $validation->check($_POST, [
-          'fnx' => [
-            'display' => 'First Name',
-            'required' => true,
-            'min' => 1,
-            'max' => 25,
-          ],
-        ]);
+                    'fnx' => [
+                        'display'  => 'First Name',
+                        'required' => true,
+                        'min'      => 1,
+                        'max'      => 25,
+                    ],
+                ]);
                 if ($validation->passed()) {
                     $db->update('users', $userId, $fields);
                     $successes[] = 'First Name Updated';
@@ -124,13 +124,13 @@ if (!empty($_POST)) {
             if ($userdetails->lname != $lname) {
                 $fields = ['lname' => $lname];
                 $validation->check($_POST, [
-          'lnx' => [
-            'display' => 'Last Name',
-            'required' => true,
-            'min' => 1,
-            'max' => 25,
-          ],
-        ]);
+                    'lnx' => [
+                        'display'  => 'Last Name',
+                        'required' => true,
+                        'min'      => 1,
+                        'max'      => 25,
+                    ],
+                ]);
                 if ($validation->passed()) {
                     $db->update('users', $userId, $fields);
                     $successes[] = 'Last Name Updated';
@@ -144,18 +144,18 @@ if (!empty($_POST)) {
 
             if (!empty($_POST['pwx'])) {
                 $validation->check($_POST, [
-          'pwx' => [
-            'display' => 'New Password',
-            'required' => true,
-            'min' => $settings->min_pw,
-            'max' => $settings->max_pw,
-          ],
-          'confirm' => [
-            'display' => 'Confirm New Password',
-            'required' => true,
-            'matches' => 'pwx',
-          ],
-        ]);
+                    'pwx' => [
+                        'display'  => 'New Password',
+                        'required' => true,
+                        'min'      => $settings->min_pw,
+                        'max'      => $settings->max_pw,
+                    ],
+                    'confirm' => [
+                        'display'  => 'Confirm New Password',
+                        'required' => true,
+                        'matches'  => 'pwx',
+                    ],
+                ]);
 
                 if (empty($errors)) {
                     //process
@@ -187,13 +187,13 @@ if (!empty($_POST)) {
             $db->update('users', $userdetails->id, ['vericode' => $vericode, 'vericode_expiry' => $vericode_expiry]);
             if (isset($_POST['sendPwReset'])) {
                 $params = [
-          'username' => $userdetails->username,
-          'sitename' => $settings->site_name,
-          'fname' => $userdetails->fname,
-          'email' => rawurlencode($userdetails->email),
-          'vericode' => $vericode,
-          'reset_vericode_expiry' => $settings->reset_vericode_expiry,
-        ];
+                    'username'              => $userdetails->username,
+                    'sitename'              => $settings->site_name,
+                    'fname'                 => $userdetails->fname,
+                    'email'                 => rawurlencode($userdetails->email),
+                    'vericode'              => $vericode,
+                    'reset_vericode_expiry' => $settings->reset_vericode_expiry,
+                ];
                 $to = rawurlencode($userdetails->email);
                 $subject = lang('PW_RESET');
                 $body = email_body('_email_adminPwReset.php', $params);
@@ -225,15 +225,15 @@ if (!empty($_POST)) {
             if ($userdetails->email != $email) {
                 $fields = ['email' => $email];
                 $validation->check($_POST, [
-          'emx' => [
-            'display' => 'Email',
-            'required' => true,
-            'valid_email' => true,
-            'unique_update' => 'users,'.$userId,
-            'min' => 3,
-            'max' => 75,
-          ],
-        ]);
+                    'emx' => [
+                        'display'       => 'Email',
+                        'required'      => true,
+                        'valid_email'   => true,
+                        'unique_update' => 'users,'.$userId,
+                        'min'           => 3,
+                        'max'           => 75,
+                    ],
+                ]);
                 if ($validation->passed()) {
                     $db->update('users', $userId, $fields);
                     $successes[] = 'Email Updated';

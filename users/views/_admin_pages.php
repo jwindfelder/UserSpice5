@@ -80,7 +80,7 @@ foreach ($pages as $page) {
 $deletions = array_column(array_map(function ($o) {return (array) $o; }, $dbpages), 'id');
 
 $deletes = '';
-for ($i = 0; $i < count($deletions); ++$i) {
+for ($i = 0; $i < count($deletions); $i++) {
     $deletes .= $deletions[$i].',';
 }
 $deletes = rtrim($deletes, ',');
@@ -239,7 +239,7 @@ $csrf = Token::generate();
               </a>
             </td></tr>
             <?php
-            ++$count;
+            $count++;
         }?>
         </tbody>
       </table>

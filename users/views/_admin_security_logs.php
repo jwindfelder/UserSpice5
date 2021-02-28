@@ -27,7 +27,7 @@ tfoot input {
   <h2 class="mb-3">Security Logs</h2>
   <!-- <a href='admin.php?view=logsman'>Go to Logs Manager</a> -->
   <?php resultBlock($errors, $successes);
-  $logs = $db->query("SELECT * FROM audit ORDER BY id DESC LIMIT 5000")->results(); ?>
+  $logs = $db->query('SELECT * FROM audit ORDER BY id DESC LIMIT 5000')->results(); ?>
   <div class="card">
 
     <div class="card-body table-sm table-responsive">
@@ -41,26 +41,26 @@ tfoot input {
           </tr>
         </thead>
         <tbody>
-          <?php foreach($logs as $m){ ?>
+          <?php foreach ($logs as $m) { ?>
             <tr>
               <td><?=$m->id?></td>
               <td><?php
-              if($m->user > 0){
-                echouser($m->user);
-              }else{
-                $q = $db->query("SELECT * FROM us_ip_list WHERE ip = ? ORDER BY id DESC",array($m->ip));
-                $c = $q->count();
-                if($c > 0){
-                  $f = $q->first();
-                  echo "IP last used by ";
-                  echouser($f->user_id);
-                }else{
-                  echo "<font color='red'>Unknown IP</font>";
-                }
+              if ($m->user > 0) {
+                  echouser($m->user);
+              } else {
+                  $q = $db->query('SELECT * FROM us_ip_list WHERE ip = ? ORDER BY id DESC', [$m->ip]);
+                  $c = $q->count();
+                  if ($c > 0) {
+                      $f = $q->first();
+                      echo 'IP last used by ';
+                      echouser($f->user_id);
+                  } else {
+                      echo "<font color='red'>Unknown IP</font>";
+                  }
               }
               ?></td>
 
-              <td><?php echopage($m->page);?></td>
+              <td><?php echopage($m->page); ?></td>
 
               <td><?=$m->timestamp?></td>
             </tr>

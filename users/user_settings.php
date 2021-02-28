@@ -22,7 +22,7 @@ require_once '../users/init.php';
 require_once $abs_us_root.$us_url_root.'users/includes/template/prep.php';
 
 if (!securePage($_SERVER['PHP_SELF'])) {
-    die();
+    exit();
 }
 $hooks = getMyHooks();
 includeHook($hooks, 'pre');
@@ -58,18 +58,18 @@ if (!empty($_POST)) {
         $displayname = Input::get('username');
         if ($userdetails->username != $displayname && ($settings->change_un == 1 || (($settings->change_un == 2) && ($user->data()->un_changed == 0)))) {
             $fields = [
-        'username' => $displayname,
-        'un_changed' => 1,
-      ];
+                'username'   => $displayname,
+                'un_changed' => 1,
+            ];
             $validation->check($_POST, [
-        'username' => [
-          'display' => lang('GEN_UNAME'),
-          'required' => true,
-          'unique_update' => 'users,'.$userId,
-          'min' => $settings->min_un,
-          'max' => $settings->max_un,
-        ],
-      ]);
+                'username' => [
+                    'display'       => lang('GEN_UNAME'),
+                    'required'      => true,
+                    'unique_update' => 'users,'.$userId,
+                    'min'           => $settings->min_un,
+                    'max'           => $settings->max_un,
+                ],
+            ]);
             if ($validation->passed()) {
                 if (($settings->change_un == 2) && ($user->data()->un_changed == 1)) {
                     $msg = lang('REDIR_UN_ONCE');
@@ -90,13 +90,13 @@ if (!empty($_POST)) {
         if ($userdetails->fname != $fname) {
             $fields = ['fname' => $fname];
             $validation->check($_POST, [
-        'fname' => [
-          'display' => lang('GEN_FNAME'),
-          'required' => true,
-          'min' => 1,
-          'max' => 60,
-        ],
-      ]);
+                'fname' => [
+                    'display'  => lang('GEN_FNAME'),
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 60,
+                ],
+            ]);
             if ($validation->passed()) {
                 $db->update('users', $userId, $fields);
                 $successes[] = lang('GEN_FNAME').' '.lang('GEN_UPDATED');
@@ -113,13 +113,13 @@ if (!empty($_POST)) {
         if ($userdetails->lname != $lname) {
             $fields = ['lname' => $lname];
             $validation->check($_POST, [
-        'lname' => [
-          'display' => lang('GEN_LNAME'),
-          'required' => true,
-          'min' => 1,
-          'max' => 60,
-        ],
-      ]);
+                'lname' => [
+                    'display'  => lang('GEN_LNAME'),
+                    'required' => true,
+                    'min'      => 1,
+                    'max'      => 60,
+                ],
+            ]);
             if ($validation->passed()) {
                 $db->update('users', $userId, $fields);
                 $successes[] = lang('GEN_FNAME').' '.lang('GEN_UPDATED');
@@ -140,15 +140,15 @@ if (!empty($_POST)) {
                     $confemail = Input::get('confemail');
                     $fields = ['email' => $email];
                     $validation->check($_POST, [
-            'email' => [
-              'display' => lang('GEN_EMAIL'),
-              'required' => true,
-              'valid_email' => true,
-              'unique_update' => 'users,'.$userId,
-              'min' => 5,
-              'max' => 100,
-            ],
-          ]);
+                        'email' => [
+                            'display'       => lang('GEN_EMAIL'),
+                            'required'      => true,
+                            'valid_email'   => true,
+                            'unique_update' => 'users,'.$userId,
+                            'min'           => 5,
+                            'max'           => 100,
+                        ],
+                    ]);
                     if ($validation->passed()) {
                         if ($confemail == $email) {
                             if ($emailR->email_act == 0) {
@@ -162,11 +162,11 @@ if (!empty($_POST)) {
                                 $db->update('users', $userId, ['email_new' => $email, 'vericode' => $vericode, 'vericode_expiry' => $vericode_expiry]);
                                 //Send the email
                                 $options = [
-                  'fname' => $user->data()->fname,
-                  'email' => rawurlencode($user->data()->email),
-                  'vericode' => $vericode,
-                  'join_vericode_expiry' => $settings->join_vericode_expiry,
-                ];
+                                    'fname'                => $user->data()->fname,
+                                    'email'                => rawurlencode($user->data()->email),
+                                    'vericode'             => $vericode,
+                                    'join_vericode_expiry' => $settings->join_vericode_expiry,
+                                ];
                                 $encoded_email = rawurlencode($email);
                                 $subject = lang('EML_VER');
                                 $body = email_body('_email_template_verify_new.php', $options);
@@ -192,18 +192,18 @@ if (!empty($_POST)) {
                 }
                 if (!empty($_POST['password'])) {
                     $validation->check($_POST, [
-            'password' => [
-              'display' => lang('NEW_PW'),
-              'required' => true,
-              'min' => $settings->min_pw,
-              'max' => $settings->max_pw,
-            ],
-            'confirm' => [
-              'display' => lang('PW_CONF'),
-              'required' => true,
-              'matches' => 'password',
-            ],
-          ]);
+                        'password' => [
+                            'display'  => lang('NEW_PW'),
+                            'required' => true,
+                            'min'      => $settings->min_pw,
+                            'max'      => $settings->max_pw,
+                        ],
+                        'confirm' => [
+                            'display'  => lang('PW_CONF'),
+                            'required' => true,
+                            'matches'  => 'password',
+                        ],
+                    ]);
                     foreach ($validation->errors() as $error) {
                         $errors[] = $error;
                     }

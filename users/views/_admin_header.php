@@ -4,15 +4,15 @@
 
   <?php
   require_once $abs_us_root.$us_url_root.'users/includes/template/header3_must_include.php';
-  if(isset($_GET['err'])){
-      $err=Input::get('err');
-  		err($err);
-  	}
+  if (isset($_GET['err'])) {
+      $err = Input::get('err');
+      err($err);
+  }
 
-  	if(isset($_GET['msg'])){
-      $msg=Input::get('msg');
-  		bold($msg);
-  	}
+    if (isset($_GET['msg'])) {
+        $msg = Input::get('msg');
+        bold($msg);
+    }
       ?>
 
   <div class="header-menu">
@@ -22,20 +22,21 @@
         <div class="page-title">
           <h1>Dashboard</h1>
           <?php
-            include($abs_us_root.$us_url_root.'users/includes/migrations.php');
+            include $abs_us_root.$us_url_root.'users/includes/migrations.php';
 
-            $updates = $db->query("SELECT * FROM updates");
-            if(!$db->error()) {
-              $updates=$db->results();
-              $existing_updates=[];
-              foreach($updates as $u){
-                $existing_updates[] = $u->migration;
-              }
+            $updates = $db->query('SELECT * FROM updates');
+            if (!$db->error()) {
+                $updates = $db->results();
+                $existing_updates = [];
+                foreach ($updates as $u) {
+                    $existing_updates[] = $u->migration;
+                }
 
-              $missing = array_diff($migrations,$existing_updates);
-              if(count($missing)) { ?>
+                $missing = array_diff($migrations, $existing_updates);
+                if (count($missing)) { ?>
               <font color="red">Your database is out of date. Please <a href='<?=$us_url_root?>users/updates/' class='nounderline'>click here</a> to run the updater.</font>
-            <?php } } ?>
+            <?php }
+            } ?>
         </div>
       </div>
     </div>

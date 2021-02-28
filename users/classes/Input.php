@@ -17,46 +17,51 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-class Input {
-	public static function exists($type = 'post'){
-		switch ($type) {
-			case 'post':
-			return (!empty($_POST)) ? true : false;
-			break;
+class Input
+{
+    public static function exists($type = 'post')
+    {
+        switch ($type) {
+            case 'post':
+            return (!empty($_POST)) ? true : false;
+            break;
 
-			case 'get':
-			return (!empty($_GET)) ? true : false;
+            case 'get':
+            return (!empty($_GET)) ? true : false;
 
-			default:
-			return false;
-			break;
-		}
-	}
+            default:
+            return false;
+            break;
+        }
+    }
 
-	public static function get($item){
-		if (isset($_POST[$item])) {
-			/*
-			If the $_POST item is an array, process each item independently, and return array of sanitized items.
-			*/
-			return self::sanitize($_POST[$item]);
+    public static function get($item)
+    {
+        if (isset($_POST[$item])) {
+            /*
+            If the $_POST item is an array, process each item independently, and return array of sanitized items.
+            */
+            return self::sanitize($_POST[$item]);
+        } elseif (isset($_GET[$item])) {
+            /*
+            If the $_GET item is an array, process each item independently, and return array of sanitized items.
+            */
+            return self::sanitize($_GET[$item]);
+        }
 
-		} elseif(isset($_GET[$item])){
-			/*
-			If the $_GET item is an array, process each item independently, and return array of sanitized items.
-			*/
-			return self::sanitize($_GET[$item]);
-		}
-		return '';
-	}
+        return '';
+    }
 
-	public static function sanitize($item){
-		if (is_array($item)){
-			foreach ($item as $key => $itemValue){
-				$postItems[$key]=self::sanitize($itemValue);
-			}
-			return $postItems;
-		}else{
-			return trim(htmlentities($item, ENT_QUOTES, 'UTF-8'));
-		}
-	}
+    public static function sanitize($item)
+    {
+        if (is_array($item)) {
+            foreach ($item as $key => $itemValue) {
+                $postItems[$key] = self::sanitize($itemValue);
+            }
+
+            return $postItems;
+        } else {
+            return trim(htmlentities($item, ENT_QUOTES, 'UTF-8'));
+        }
+    }
 }

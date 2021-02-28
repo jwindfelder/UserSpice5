@@ -1,3 +1,3 @@
 <?php
-die("Nothing to see here :)");
- ?>
+
+exit('Nothing to see here :)');

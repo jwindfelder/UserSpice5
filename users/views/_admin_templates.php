@@ -14,28 +14,28 @@
 
 <div class="content mt-3">
   <?php
-  $dirs = glob($abs_us_root . $us_url_root . 'usersc/templates/*', GLOB_ONLYDIR);
+  $dirs = glob($abs_us_root.$us_url_root.'usersc/templates/*', GLOB_ONLYDIR);
   $templates = [];
   foreach ($dirs as $d) {
-    $templates[] = str_replace($abs_us_root . $us_url_root . 'usersc/templates/', "", $d);
+      $templates[] = str_replace($abs_us_root.$us_url_root.'usersc/templates/', '', $d);
   }
 
   if (!empty($_POST['template'])) {
-    $choice = Input::get('template');
-    $delete = Input::get('delete');
-    $navstyle = Input::get('navstyle');
-    //check if choice is a valid template
-    if (in_array($choice, $templates)) {
-      $db->update('settings', 1, ['template' => $choice]);
-      if(!$db->error()) {
-        Redirect::to('admin.php?view=templates&msg=Template+assigned!');
+      $choice = Input::get('template');
+      $delete = Input::get('delete');
+      $navstyle = Input::get('navstyle');
+      //check if choice is a valid template
+      if (in_array($choice, $templates)) {
+          $db->update('settings', 1, ['template' => $choice]);
+          if (!$db->error()) {
+              Redirect::to('admin.php?view=templates&msg=Template+assigned!');
+          } else {
+              logger($user->data()->id, 'Admin Templates', 'Failed to assign template, Error: '.$db->errorString());
+              Redirect::to('admin.php?view=templates&msg=Template+assigned!');
+          }
       } else {
-        logger($user->data()->id,"Admin Templates","Failed to assign template, Error: ".$db->errorString());
-        Redirect::to('admin.php?view=templates&msg=Template+assigned!');
+          Redirect::to('admin.php?view=templates&err=Invalid+template');
       }
-    }  else {
-      Redirect::to('admin.php?view=templates&err=Invalid+template');
-    }
   }
   ?>
 
@@ -70,15 +70,16 @@
     <div class="row">
       <div class="col-12">
         <?php foreach ($templates as $t) { ?>
-          <?php echo "<h3 align='center'>" . ucfirst($t) . "</h3>"; ?>
+          <?php echo "<h3 align='center'>".ucfirst($t).'</h3>'; ?>
           <div class="row">
             <div class="col-md-6 text-center">
-              <img src="<?= $us_url_root . 'usersc/templates/' . $t . '/thumbnail.jpg' ?>" alt="thumbnail" width="300">
+              <img src="<?= $us_url_root.'usersc/templates/'.$t.'/thumbnail.jpg' ?>" alt="thumbnail" width="300">
                 <?php
-                if (file_exists($abs_us_root . $us_url_root . 'usersc/templates/' . $t . '/preview.php')) {
-                  ?>
+                if (file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$t.'/preview.php')) {
+                    ?>
                   <p align="center"><a href="../usersc/templates/<?= $t ?>/preview.php" type="button" class="btn btn-primary">Preview</a></p>
-                  <?php }else{ ?>
+                  <?php
+                } else { ?>
                   <p align="center"><a href="#" type="button" class="btn btn-default">No Preview Available</a></p>
               <?php } ?>
               <form class="" id="temlate" action="<?=$us_url_root?>users/admin.php?view=templates" method="post">
@@ -93,38 +94,38 @@
               </form>
 
             <?php
-            if (file_exists($abs_us_root . $us_url_root . 'usersc/templates/' . $t . '/info.xml')) {
-              $path = $abs_us_root . $us_url_root . 'usersc/templates/' . $t . '/info.xml';
-              $xml = simplexml_load_file($path);
+            if (file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$t.'/info.xml')) {
+                $path = $abs_us_root.$us_url_root.'usersc/templates/'.$t.'/info.xml';
+                $xml = simplexml_load_file($path);
             }
             ?>
             <?php
             if (!empty($_POST['navstyle'])) {
-              $navstyle = Input::get('navstyle');
-              $tpath = Input::get('tpath');
+                $navstyle = Input::get('navstyle');
+                $tpath = Input::get('tpath');
 
-              if (!empty($navstyle)) {
-                if ($navstyle == 'Default') {
-                  $xml->navstyle = 'Default';
-                  $xml->asXML($tpath);
-                  Redirect::to('admin.php?view=templates&msg=Default+Nav+Activated');
+                if (!empty($navstyle)) {
+                    if ($navstyle == 'Default') {
+                        $xml->navstyle = 'Default';
+                        $xml->asXML($tpath);
+                        Redirect::to('admin.php?view=templates&msg=Default+Nav+Activated');
+                    }
+                    if ($navstyle == 'Left Side') {
+                        $xml->navstyle = 'Left Side';
+                        $xml->asXML($tpath);
+                        Redirect::to('admin.php?view=templates&msg=Left+Side+Nav+Activated');
+                    }
+                    if ($navstyle == 'Right Side') {
+                        $xml->navstyle = 'Right Side';
+                        $xml->asXML($tpath);
+                        Redirect::to('admin.php?view=templates&msg=Right+Side+Nav+Activated');
+                    }
                 }
-                if ($navstyle == 'Left Side') {
-                  $xml->navstyle = 'Left Side';
-                  $xml->asXML($tpath);
-                  Redirect::to('admin.php?view=templates&msg=Left+Side+Nav+Activated');
-                }
-                if ($navstyle == 'Right Side') {
-                  $xml->navstyle = 'Right Side';
-                  $xml->asXML($tpath);
-                  Redirect::to('admin.php?view=templates&msg=Right+Side+Nav+Activated');
-                }
-              }
             }
             ?>
           </div>
           <div class="col-sm-6">
-            <?php if (file_exists($abs_us_root . $us_url_root . 'usersc/templates/' . $t . '/info.xml')) { ?>
+            <?php if (file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$t.'/info.xml')) { ?>
               <strong>Author:</strong><a href="<?= $xml->website ?>"><?= $xml->author ?></a><br>
               <strong>Released:</strong><?= $xml->release ?><br>
               <strong>Version:</strong><?= $xml->version ?><br>
@@ -133,8 +134,8 @@
 
 
             <?php
-            if (file_exists($abs_us_root . $us_url_root . 'usersc/templates/' . $t . '/info.xml')) {
-              ?>
+            if (file_exists($abs_us_root.$us_url_root.'usersc/templates/'.$t.'/info.xml')) {
+                ?>
               <strong>Library:</strong><font color="blue"><?= $xml->library ?></font><br>
               <strong>DB Nav:</strong><?php bin($xml->dbnav); ?><br>
               <strong>Dropdown Nav:</strong><?php bin($xml->dropnav); ?><br>
@@ -142,11 +143,10 @@
 
                       <?php
                       $save = $xml->navopts;
-                      if($save != ''){
-                        $opts = explode(',', $save);
-                        $xml->navopts = $save;
-                        $xml->asXML($path);
-                        ?>
+                if ($save != '') {
+                    $opts = explode(',', $save);
+                    $xml->navopts = $save;
+                    $xml->asXML($path); ?>
 
                         <strong>Nav Style:</strong>
                         <form class="form" id="navstyle"  action="<?=$us_url_root?>users/admin.php?view=templates" method="POST">
@@ -154,8 +154,10 @@
                             <font color="blue">
                               <select class="form-control" id="navstyle" name="navstyle">
                                 <?php
-                                foreach($opts as $o){?>
-                                  <option <?php if($o == $xml->navstyle){echo "selected";}?> value="<?=$o?>"><?=$o?></option>
+                                foreach ($opts as $o) {?>
+                                  <option <?php if ($o == $xml->navstyle) {
+                                    echo 'selected';
+                                }?> value="<?=$o?>"><?=$o?></option>
                                 <?php } ?>
                               </select></font>
                               <input hidden="true" name="tpath" value="<?php echo $path ?>">
@@ -164,12 +166,14 @@
                               </div>
                             </div>
                           </form>
-                      <?php } ?>
+                      <?php
+                } ?>
 
 
             </div><div class="col-sm-6">
                 <hr id="hr">
-              <?php } ?>
+              <?php
+            } ?>
             </div></div><hr id="hr1">
 
           <?php } ?>

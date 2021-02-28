@@ -25,17 +25,17 @@
   Gmail is significantly easier to use for sending mail than your average SMTP mailer.<br><br>
   <br>
   <?php
-  if (!empty($_POST)){
-    $to = $_POST['test_acct'];
-    $subject = 'Testing Your Email Settings!';
-    $body = 'This is the body of your test email';
-    $mail_result=email($to,$subject,$body);
+  if (!empty($_POST)) {
+      $to = $_POST['test_acct'];
+      $subject = 'Testing Your Email Settings!';
+      $body = 'This is the body of your test email';
+      $mail_result = email($to, $subject, $body);
 
-    if($mail_result){
-      echo '<div class="alert alert-success" role="alert">Mail sent successfully</div><br/>';
-    }else{
-      echo '<div class="alert alert-danger" role="alert">Mail ERROR</div><br/>';
-    }
+      if ($mail_result) {
+          echo '<div class="alert alert-success" role="alert">Mail sent successfully</div><br/>';
+      } else {
+          echo '<div class="alert alert-danger" role="alert">Mail ERROR</div><br/>';
+      }
   }
   ?>
 

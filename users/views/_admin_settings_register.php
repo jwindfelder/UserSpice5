@@ -25,7 +25,9 @@
               <label for="registration">Allow New User Registration <a href="#!" class="nounderline" data-toggle="popover" data-content="Registration Switcher! Also controls OAuth (Social Logins). Default: Enabled." title="Note"><i class="fa fa-question-circle"></i></a></label>
               <span style="float:right;">
                 <label class="switch switch-text switch-success">
-                  <input id="registration" type="checkbox" class="switch-input toggle" data-desc="Registration System" <?php if($settings->registration==1) echo 'checked="true"'; ?>>
+                  <input id="registration" type="checkbox" class="switch-input toggle" data-desc="Registration System" <?php if ($settings->registration == 1) {
+    echo 'checked="true"';
+} ?>>
                   <span data-on="Yes" data-off="No" class="switch-label"></span>
                   <span class="switch-handle"></span>
                 </label>
@@ -44,17 +46,27 @@
             <div class="form-group">
               <label for="change_un">Allow users to change their Usernames <a href="#!" class="nounderline" title="Note" data-toggle="popover" data-content="Does as it says. Default: Disabled."><i class="fa fa-question-circle"></i></a></label>
               <select id="change_un" class="form-control ajxnum" data-desc="Allow users to change their Usernames" name="change_un">
-                <option value="0" <?php if($settings->change_un==0) echo 'selected="selected"'; ?> >Disabled</option>
-                <option value="1" <?php if($settings->change_un==1) echo 'selected="selected"'; ?> >Enabled</option>
-                <option value="2" <?php if($settings->change_un==2) echo 'selected="selected"'; ?> >Only once</option>
+                <option value="0" <?php if ($settings->change_un == 0) {
+    echo 'selected="selected"';
+} ?> >Disabled</option>
+                <option value="1" <?php if ($settings->change_un == 1) {
+    echo 'selected="selected"';
+} ?> >Enabled</option>
+                <option value="2" <?php if ($settings->change_un == 2) {
+    echo 'selected="selected"';
+} ?> >Only once</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="auto_assign_un">Auto Assign Usernames <a href="#!" class="nounderline" title="Note" data-toggle="popover" data-content="Don't want users to choose their usernames? No worries! Enable this and a users default username will be their first initial and last name. This already exists? Okay! Lets do first name and last initial. Still not good? Email address it is since you won't be duplicating emails in your database! This will remove the username field from both the external and internal registration forms.Â Default: Disabled."><i class="fa fa-question-circle"></i></a></label>
               <select id="auto_assign_un" class="form-control ajxnum" data-desc="Auto Assign Usernames" name="auto_assign_un">
-                <option value="1" <?php if($settings->auto_assign_un==1) echo 'selected="selected"'; ?> >Enabled</option>
-                <option value="0" <?php if($settings->auto_assign_un==0) echo 'selected="selected"'; ?> >Disabled</option>
+                <option value="1" <?php if ($settings->auto_assign_un == 1) {
+    echo 'selected="selected"';
+} ?> >Enabled</option>
+                <option value="0" <?php if ($settings->auto_assign_un == 0) {
+    echo 'selected="selected"';
+} ?> >Disabled</option>
               </select>
             </div>
 
@@ -77,7 +89,9 @@
               <label for="req_num">Recommend a Number in the Password?</label>
               <span style="float:right;">
                 <label class="switch switch-text switch-success">
-                  <input id="req_num" type="checkbox" class="switch-input toggle" data-desc="Recommend a Number" <?php if($settings->req_num==1) echo 'checked="true"'; ?>>
+                  <input id="req_num" type="checkbox" class="switch-input toggle" data-desc="Recommend a Number" <?php if ($settings->req_num == 1) {
+    echo 'checked="true"';
+} ?>>
                   <span data-on="Yes" data-off="No" class="switch-label"></span>
                   <span class="switch-handle"></span>
                 </label>
@@ -87,7 +101,9 @@
               <label for="req_cap">Recommend a Capital Letter in the Password?</label>
               <span style="float:right;">
                 <label class="switch switch-text switch-success">
-                  <input id="req_cap" type="checkbox" class="switch-input toggle" data-desc="Recommend a Capital Letter" <?php if($settings->req_cap==1) echo 'checked="true"'; ?>>
+                  <input id="req_cap" type="checkbox" class="switch-input toggle" data-desc="Recommend a Capital Letter" <?php if ($settings->req_cap == 1) {
+    echo 'checked="true"';
+} ?>>
                   <span data-on="Yes" data-off="No" class="switch-label"></span>
                   <span class="switch-handle"></span>
                 </label>
